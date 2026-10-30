@@ -1,0 +1,39 @@
+@import "tailwindcss";
+
+/* Bookal design tokens, carried over 1:1 from the current index.html (light + dark) */
+:root {
+  --bg:#F1F3F9; --bg-soft:#E7EAF5; --card:#FFFFFF; --ink:#0E1433; --sub:#565C7A;
+  --navy:#16215B; --on-navy:#FFFFFF; --gold:#D9A441; --gold-soft:#F6E8CB; --line:#DCE0EE; --danger:#B8341F;
+  --hero:#101848; --hero-2:#080D2B;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg:#0B0D1C; --bg-soft:#141833; --card:#12162B; --ink:#EEF0FA; --sub:#A3A8C4;
+    --navy:#8B98F0; --on-navy:#0A0E28; --gold:#E8BC72; --gold-soft:#2E2614; --line:#242A4A; --danger:#FF8A75;
+    --hero:#0E1438; --hero-2:#060920; color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg:#0B0D1C; --bg-soft:#141833; --card:#12162B; --ink:#EEF0FA; --sub:#A3A8C4;
+  --navy:#8B98F0; --on-navy:#0A0E28; --gold:#E8BC72; --gold-soft:#2E2614; --line:#242A4A; --danger:#FF8A75;
+  --hero:#0E1438; --hero-2:#060920; color-scheme: dark;
+}
+
+@theme inline {
+  --color-bg: var(--bg);        --color-soft: var(--bg-soft);   --color-card: var(--card);
+  --color-ink: var(--ink);      --color-sub: var(--sub);        --color-line: var(--line);
+  --color-navy: var(--navy);    --color-on-navy: var(--on-navy);
+  --color-gold: var(--gold);    --color-gold-soft: var(--gold-soft);
+  --color-danger: var(--danger);
+  --color-hero: var(--hero);    --color-hero-2: var(--hero-2);
+  --font-sans: var(--font-manrope), "Segoe UI", system-ui, sans-serif;
+  --font-display: var(--font-bricolage), "Segoe UI", system-ui, sans-serif;
+  --shadow-pop: 0 12px 28px -12px rgb(14 20 51 / .28);
+}
+
+@layer base {
+  body { @apply bg-bg font-sans text-ink antialiased; }
+  h1, h2, h3 { @apply font-display font-extrabold tracking-tight; }
+  :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
+}

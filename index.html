@@ -1,0 +1,1453 @@
+<!DOCTYPE html>
+<html lang="az" id="htmlRoot">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Bookal</title>
+<meta name="theme-color" content="#101848">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600..800&family=Manrope:wght@400..800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#F1F3F9; --bg-soft:#E7EAF5; --card:#FFFFFF; --ink:#0E1433; --sub:#565C7A; --sub-2:#8A8FA8;
+  --navy:#16215B; --navy-2:#2B3A8C; --navy-dk:#0A1030; --on-navy:#fff;
+  --gold:#D9A441; --gold-ink:#7C5209; --gold-soft:#F6E8CB; --line:#DCE0EE; --danger:#B8341F;
+  --hero:#101848; --hero-2:#080D2B;
+  --c-textbook:#26398F; --c-fiction:#A63A4E; --c-science:#17706E; --c-language:#6B4FA3; --c-other:#4B5573;
+  --shadow-sm:0 1px 2px rgba(14,20,51,.06); --shadow-md:0 12px 28px -12px rgba(14,20,51,.28); --shadow-lg:0 30px 70px -24px rgba(14,20,51,.4);
+  --radius:14px; --radius-sm:10px; --radius-lg:24px;
+  --display:'Bricolage Grotesque','Segoe UI',system-ui,sans-serif; --body:'Manrope','Segoe UI',system-ui,sans-serif;
+  box-sizing:border-box; padding-top:env(safe-area-inset-top,0px); padding-bottom:env(safe-area-inset-bottom,0px);
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0B0D1C; --bg-soft:#141833; --card:#12162B; --ink:#EEF0FA; --sub:#A3A8C4; --sub-2:#6D7290;
+    --navy:#8B98F0; --navy-2:#A7B1F5; --on-navy:#0A0E28; --gold:#E8BC72; --gold-ink:#E8BC72; --gold-soft:#2E2614; --line:#242A4A;
+    --hero:#0E1438; --hero-2:#060920; --shadow-md:0 12px 28px -12px rgba(0,0,0,.6); --shadow-lg:0 30px 70px -24px rgba(0,0,0,.7);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0B0D1C; --bg-soft:#141833; --card:#12162B; --ink:#EEF0FA; --sub:#A3A8C4; --sub-2:#6D7290;
+  --navy:#8B98F0; --navy-2:#A7B1F5; --on-navy:#0A0E28; --gold:#E8BC72; --gold-ink:#E8BC72; --gold-soft:#2E2614; --line:#242A4A;
+  --hero:#0E1438; --hero-2:#060920; --shadow-md:0 12px 28px -12px rgba(0,0,0,.6); --shadow-lg:0 30px 70px -24px rgba(0,0,0,.7);
+}
+html{scroll-padding-top:env(safe-area-inset-top,0px); height:100%; scroll-behavior:smooth;}
+*{box-sizing:border-box;}
+body{margin:0; min-height:100%; display:flex; flex-direction:column; background:var(--bg); color:var(--ink); font-family:var(--body); -webkit-font-smoothing:antialiased; line-height:1.5;}
+h1,h2,h3{font-family:var(--display); font-weight:800; letter-spacing:-.025em;}
+a{color:inherit;}
+:focus-visible{outline:3px solid var(--gold); outline-offset:2px; border-radius:6px;}
+.sr{position:absolute; width:1px; height:1px; overflow:hidden; clip:rect(0 0 0 0); white-space:nowrap;}
+.wrap{max-width:1208px; margin:0 auto; padding:0 24px; width:100%;}
+
+/* header */
+header{position:sticky; top:env(safe-area-inset-top,0px); z-index:20; background:color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter:blur(16px) saturate(170%); -webkit-backdrop-filter:blur(16px) saturate(170%); border-bottom:1px solid var(--line);}
+.hd-row{display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:22px; flex-wrap:wrap; max-width:1208px; margin:0 auto;}
+.hd-right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+.logo{display:flex; align-items:center; gap:12px;}
+.logo-mark{height:42px; width:42px; display:block; flex-shrink:0; border-radius:12px;}
+.logo-img{height:42px; width:auto; display:block; background:#fff; border-radius:10px; padding:4px 7px; box-shadow:0 0 0 1px var(--line);}
+.logo-text{display:flex; flex-direction:column; line-height:1.1;}
+.logo-text span:first-child{font-family:var(--display); font-size:20px; font-weight:800; letter-spacing:-.02em;}
+.logo-text span:last-child{font-size:10.5px; font-weight:700; color:var(--sub); letter-spacing:.06em;}
+nav{display:flex; align-items:center; gap:10px; flex-wrap:wrap;}
+.langsw{display:flex; gap:2px; background:var(--bg-soft); border-radius:100px; padding:3px;}
+.langsw button{border:none; background:transparent; padding:6px 11px; border-radius:100px; font-size:12px; font-weight:800; color:var(--sub); cursor:pointer; font-family:inherit; transition:background .15s, color .15s;}
+.langsw button.active{background:var(--navy); color:var(--on-navy);}
+.pagenav{display:flex; align-items:center; gap:28px; flex-wrap:wrap; flex:1; justify-content:center; min-width:0;}
+.pagenav span{position:relative; padding:8px 2px; font-size:14.5px; font-weight:700; color:var(--sub); cursor:pointer; white-space:nowrap; transition:color .15s;}
+.pagenav span::after{content:''; position:absolute; left:0; right:0; bottom:0; height:3px; border-radius:3px; background:var(--gold); transform:scaleX(0); transition:transform .18s;}
+.pagenav span:hover{color:var(--ink);}
+.pagenav span.active{color:var(--ink);}
+.pagenav span.active::after{transform:scaleX(1);}
+@media(max-width:860px){.pagenav{order:3; width:100%; justify-content:flex-start; gap:22px;}}
+@media(max-width:520px){.hd-row{flex-direction:column; align-items:flex-start;}}
+
+/* buttons */
+.btn{border:none; border-radius:100px; padding:12px 20px; font-family:inherit; font-size:14px; font-weight:800; cursor:pointer; transition:transform .12s, box-shadow .15s, background .15s, border-color .15s;}
+.btn:active{transform:scale(.96);}
+.btn-primary{background:var(--navy); color:var(--on-navy);}
+.btn-primary:hover{box-shadow:var(--shadow-md);}
+.btn-ghost{background:transparent; color:var(--ink); border:1.5px solid var(--line);}
+.btn-ghost:hover{border-color:var(--navy);}
+.btn-mustard{background:var(--gold); color:#241a04;}
+.btn-mustard:hover{box-shadow:0 10px 24px -8px color-mix(in srgb, var(--gold) 70%, transparent);}
+
+/* views */
+.view{display:none;}
+.view.active{display:flex; flex-direction:column; flex:1;}
+
+/* hero */
+.hero{position:relative; color:#fff; overflow:hidden; isolation:isolate; padding:80px 0 0;
+  background:radial-gradient(90% 80% at 88% -15%, #2C3CA0 0%, transparent 58%), radial-gradient(60% 50% at 0% 100%, color-mix(in srgb, var(--gold) 16%, transparent), transparent 70%), linear-gradient(180deg,var(--hero),var(--hero-2));}
+.hero h1{font-size:clamp(42px,7vw,92px); line-height:.96; letter-spacing:-.04em; margin:0 0 22px; max-width:12.5ch; text-wrap:balance;}
+.hero p{color:#BCC3E8; margin:0 0 30px; max-width:52ch; font-size:17.5px; line-height:1.6;}
+.hero-ctas{display:flex; gap:12px; flex-wrap:wrap; margin-bottom:26px;}
+.hero .btn-ghost{color:#fff; border-color:rgba(255,255,255,.34);}
+.hero .btn-ghost:hover{border-color:#fff; background:rgba(255,255,255,.08);}
+.searchbar{display:flex; background:var(--card); padding:6px; border-radius:100px; box-shadow:0 20px 40px -18px rgba(0,0,0,.6); max-width:600px;}
+.searchbar input[type=text]{flex:1; min-width:0; padding:12px 20px; border-radius:100px; border:none; background:transparent; color:var(--ink); font-family:inherit; font-size:15px; outline:none;}
+.searchbar:focus-within{box-shadow:0 0 0 3px var(--gold), 0 20px 40px -18px rgba(0,0,0,.6);}
+.chips{display:flex; gap:8px; flex-wrap:wrap; margin-top:20px;}
+.chip{padding:8px 16px; border-radius:100px; border:1px solid rgba(255,255,255,.2); background:rgba(255,255,255,.07); font-size:13px; font-weight:700; cursor:pointer; color:#D5DAF5; transition:background .15s, border-color .15s;}
+.chip:hover{border-color:rgba(255,255,255,.55);}
+.chip.active{background:var(--gold); border-color:var(--gold); color:#241a04;}
+
+/* the shelf */
+.shelf{position:relative; display:flex; align-items:flex-end; justify-content:center; gap:5px; margin-top:64px; padding:0 24px 18px;}
+.shelf::after{content:''; position:absolute; left:0; right:0; bottom:0; height:18px; background:var(--hero-2); border-top:3px solid var(--gold);}
+.sp{position:relative; flex:none; width:var(--w); height:var(--h); background:var(--c); border-radius:3px 3px 1px 1px; display:flex; align-items:center; justify-content:center;
+  box-shadow:inset 3px 0 0 rgba(255,255,255,.14), inset -5px 0 0 rgba(0,0,0,.22); animation:rise .9s cubic-bezier(.2,.8,.2,1) both; animation-delay:calc(var(--i) * 60ms);}
+.sp::before{content:''; position:absolute; left:0; right:0; top:16px; height:3px; background:var(--gold); box-shadow:0 8px 0 var(--gold); opacity:.9;}
+.sp b{writing-mode:vertical-rl; transform:rotate(180deg); font:700 12px/1 var(--display); letter-spacing:.1em; color:rgba(255,255,255,.88); white-space:nowrap;}
+.sp.lean{rotate:-9deg; transform-origin:bottom left; margin-right:34px;}
+.sp.out{translate:0 -22px; box-shadow:inset 3px 0 0 rgba(255,255,255,.3), inset -5px 0 0 rgba(0,0,0,.15), 0 0 0 2px color-mix(in srgb, var(--gold) 50%, transparent), 0 0 46px color-mix(in srgb, var(--gold) 45%, transparent);}
+.sp.out::before{background:var(--hero-2); box-shadow:0 8px 0 var(--hero-2);}
+.sp.out b{color:#241a04;}
+@keyframes rise{from{translate:0 115%;}}
+@media(max-width:820px){.sp:nth-child(n+13){display:none;}}
+@media(max-width:520px){.sp:nth-child(n+9){display:none;} .hero{padding-top:56px;}}
+@media(prefers-reduced-motion:reduce){.sp{animation:none;} html{scroll-behavior:auto;}}
+
+/* home sections */
+.how{padding:84px 24px 20px;}
+.how h2{font-size:clamp(28px,4vw,46px); margin:0 0 40px; line-height:1.05;}
+.how-list{list-style:none; margin:0; padding:0; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); border-top:2px solid var(--ink);}
+.how-list li{padding:26px 26px 6px 0; margin-right:26px; border-right:1px solid var(--line);}
+.how-list li:last-child{border-right:none; margin-right:0;}
+.how-list .n{display:block; font:800 64px/1 var(--display); letter-spacing:-.05em; color:var(--gold-ink); margin-bottom:14px;}
+.how-list p{margin:0; font-size:15.5px; line-height:1.6; color:var(--ink); max-width:30ch;}
+@media(max-width:700px){.how-list li{border-right:none; margin-right:0; border-bottom:1px solid var(--line); padding:22px 0;}}
+.why{margin-top:72px; background:var(--gold-soft); color:var(--ink);}
+.why .wrap{padding-top:64px; padding-bottom:68px; display:grid; grid-template-columns:minmax(0,1fr) minmax(0,2fr); gap:40px;}
+.why h2{font-size:clamp(24px,3vw,34px); margin:0; line-height:1.1;}
+.why p{margin:0; font:600 clamp(20px,2.4vw,28px)/1.45 var(--display); letter-spacing:-.015em; max-width:34em;}
+@media(max-width:760px){.why .wrap{grid-template-columns:1fr; gap:18px;}}
+
+/* listings */
+main{padding:48px 24px 90px;}
+.grid-head{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:26px; border-bottom:2px solid var(--ink); padding-bottom:14px;}
+.grid-head h2{font-size:clamp(28px,4vw,40px); margin:0;}
+.count{color:var(--sub); font-size:14px; font-weight:700;}
+.grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:26px 20px;}
+.card{--c:var(--c-other); background:var(--card); border-radius:6px 14px 14px 6px; padding:0 0 16px; display:flex; flex-direction:column; gap:7px; box-shadow:var(--shadow-sm), 0 0 0 1px var(--line); overflow:hidden; transition:transform .2s, box-shadow .2s;}
+.card:hover{transform:translateY(-4px) rotate(-.4deg); box-shadow:var(--shadow-md), 0 0 0 1px var(--line);}
+.card[data-cat=textbook]{--c:var(--c-textbook);} .card[data-cat=fiction]{--c:var(--c-fiction);} .card[data-cat=science]{--c:var(--c-science);} .card[data-cat=language]{--c:var(--c-language);}
+.card > *:not(.cover){margin-left:16px; margin-right:16px;}
+.cover{height:150px; background:linear-gradient(160deg, color-mix(in srgb,var(--c) 88%,#fff), var(--c) 45%, color-mix(in srgb,var(--c) 70%,#000)); color:#fff; padding:20px 18px 16px 26px; display:flex; flex-direction:column; justify-content:flex-end; position:relative; box-shadow:inset 9px 0 0 rgba(0,0,0,.2), inset 11px 0 0 rgba(255,255,255,.12);}
+.cover::before{content:''; position:absolute; left:26px; top:18px; width:34px; height:4px; background:var(--gold); box-shadow:0 8px 0 var(--gold);}
+.cover span{font:800 17px/1.2 var(--display); letter-spacing:-.015em; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; text-wrap:balance;}
+.card .meta:first-of-type{font-weight:800; color:var(--ink); font-size:14px; margin-top:6px;}
+.meta{font-size:12.5px; color:var(--sub);}
+.row-between{display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:6px; gap:8px;}
+.price{font:800 19px/1 var(--display); color:var(--gold-ink); letter-spacing:-.01em;}
+.badge{font-size:11px; font-weight:800; padding:4px 10px; border-radius:100px; background:color-mix(in srgb, var(--c) 14%, transparent); color:var(--c);}
+:root[data-theme="dark"] .badge{color:var(--ink);}
+.contact-btn{width:calc(100% - 32px); margin-top:4px;}
+.empty{color:var(--sub); font-size:15px; padding:56px 0; text-align:center;}
+.pdf-link{display:block; text-align:center; text-decoration:none; width:calc(100% - 32px);}
+.pdf-locked{text-align:center; font-size:12px; font-weight:700; color:var(--sub); background:var(--bg-soft); border-radius:100px; padding:9px; cursor:pointer;}
+
+/* modals */
+.overlay{position:fixed; inset:0; background:rgba(8,11,32,.62); backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px); display:flex; align-items:flex-start; justify-content:center; z-index:50; padding:60px 16px; overflow-y:auto; opacity:0; pointer-events:none; transition:opacity .2s;}
+.overlay.show{opacity:1; pointer-events:auto;}
+.overlay .modal{transform:translateY(12px) scale(.97); transition:transform .24s cubic-bezier(.2,.9,.3,1.1);}
+.overlay.show .modal{transform:none;}
+.modal{background:var(--card); border-radius:var(--radius-lg); padding:34px 32px 30px; max-width:440px; width:100%; box-shadow:var(--shadow-lg); position:relative; overflow:hidden;}
+.modal::before{content:''; position:absolute; top:0; left:0; right:0; height:6px; background:linear-gradient(90deg,var(--navy) 0 70%,var(--gold) 70%);}
+.modal h2{margin:0 0 4px; font-size:24px;}
+.modal .sub{color:var(--sub); font-size:14px; margin:0 0 18px;}
+.tabs{display:flex; gap:6px; margin-bottom:16px; border-bottom:1px solid var(--line);}
+.tab{padding:8px 4px; margin-right:18px; margin-bottom:-1px; font-size:14.5px; font-weight:800; color:var(--sub); cursor:pointer; border-bottom:3px solid transparent;}
+.tab.active{color:var(--ink); border-color:var(--gold);}
+label{display:block; font-size:12.5px; font-weight:700; color:var(--sub); margin:14px 0 6px;}
+input,select,textarea{width:100%; padding:12px 14px; border-radius:var(--radius-sm); border:1.5px solid var(--line); background:var(--bg-soft); color:var(--ink); font-family:inherit; font-size:14.5px; outline:none; transition:border-color .15s, background .15s;}
+input:focus,select:focus,textarea:focus{border-color:var(--navy); background:var(--card);}
+textarea{resize:vertical; min-height:74px;}
+.modal-actions{display:flex; gap:10px; margin-top:22px;}
+.close-x{position:absolute; top:18px; right:18px; background:var(--bg-soft); border:none; width:32px; height:32px; border-radius:100px; font-size:15px; color:var(--sub); cursor:pointer;}
+.close-x:hover{color:var(--ink);}
+.err{color:var(--danger); font-size:13px; margin-top:8px; min-height:14px; font-weight:600;}
+.pill-user{font-size:13px; font-weight:700; display:flex; align-items:center; gap:8px; background:var(--bg-soft); padding:8px 14px; border-radius:100px;}
+.vip-badge,.admin-badge{display:inline-block; font-size:9.5px; font-weight:800; padding:2px 7px; border-radius:100px; margin-left:6px; letter-spacing:.04em; vertical-align:1px;}
+.vip-badge{color:#241a04; background:var(--gold);} .admin-badge{color:var(--on-navy); background:var(--navy);}
+
+/* about / contact */
+.about-wrap{max-width:720px; margin:0 auto; padding:64px 24px 90px; width:100%;}
+.about-wrap h1{font-size:clamp(34px,5vw,54px); margin:0 0 22px; line-height:1;}
+.about-wrap p{color:var(--sub); font-size:16.5px; line-height:1.75; margin:0 0 18px;}
+.about-wrap h3{font-size:22px; margin:40px 0 14px;}
+.about-steps{display:grid; gap:10px; list-style:none; padding:0; margin:0;}
+.about-steps li{font-size:15.5px; line-height:1.6; padding:14px 18px; background:var(--card); border-left:4px solid var(--gold); border-radius:4px 12px 12px 4px; box-shadow:0 0 0 1px var(--line);}
+.contact-creator{display:flex; align-items:center; gap:16px; background:var(--hero); color:#fff; border-radius:var(--radius); padding:20px 22px; margin:24px 0 20px;}
+.contact-avatar{width:56px; height:56px; border-radius:100px; background:var(--gold); color:#241a04; font:800 19px var(--display); display:flex; align-items:center; justify-content:center; flex-shrink:0;}
+.contact-creator .cname{font:800 19px var(--display); letter-spacing:-.01em;}
+.contact-creator .crole{font-size:13px; color:#BCC3E8;}
+.contact-row{display:flex; align-items:center; gap:14px; text-decoration:none; background:var(--card); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:10px; box-shadow:0 0 0 1px var(--line); transition:box-shadow .15s, transform .12s;}
+.contact-row:hover{box-shadow:0 0 0 2px var(--navy); transform:translateX(3px);}
+.contact-row .cico{width:40px; height:40px; border-radius:100px; display:flex; align-items:center; justify-content:center; flex-shrink:0; background:var(--bg-soft);}
+.contact-row .cico svg{width:20px; height:20px;}
+.contact-row .clabel{font-weight:800; font-size:15px;}
+.contact-row .cval{font-size:13px; color:var(--sub);}
+
+/* chat */
+.chat-fab{position:fixed; right:20px; bottom:calc(20px + env(safe-area-inset-bottom,0px)); width:58px; height:58px; border-radius:100px; background:var(--gold); color:#241a04; display:flex; align-items:center; justify-content:center; box-shadow:var(--shadow-lg); cursor:pointer; z-index:45; transition:transform .18s;}
+.chat-fab:hover{transform:scale(1.07);}
+.chat-fab svg{width:25px; height:25px;}
+.chat-panel{position:fixed; right:20px; bottom:calc(88px + env(safe-area-inset-bottom,0px)); width:350px; max-width:calc(100vw - 40px); height:470px; max-height:calc(100vh - 160px); background:var(--card); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg), 0 0 0 1px var(--line); display:flex; flex-direction:column; overflow:hidden; z-index:45; opacity:0; transform:translateY(14px) scale(.97); pointer-events:none; transition:opacity .22s, transform .22s;}
+.chat-panel.open{opacity:1; transform:none; pointer-events:auto;}
+.chat-panel-head{display:flex; align-items:center; justify-content:space-between; padding:14px 18px; background:var(--hero); color:#fff; font:800 16px var(--display); flex-shrink:0;}
+.chat-panel-close{background:rgba(255,255,255,.14); border:none; width:28px; height:28px; border-radius:100px; font-size:13px; color:#fff; cursor:pointer;}
+.chat-log{flex:1; overflow-y:auto; padding:16px; display:flex; flex-direction:column; gap:10px; background:var(--bg);}
+.chat-input{display:flex; gap:8px; padding:12px 14px; border-top:1px solid var(--line);}
+.chat-input input{flex:1; border-radius:100px;}
+.chat-locked{color:var(--sub); font-size:14px; text-align:center; padding:28px 14px;}
+.msg{max-width:82%; padding:10px 14px; border-radius:16px 16px 16px 4px; background:var(--card); box-shadow:0 0 0 1px var(--line); font-size:14px;}
+.msg .who{font-size:11.5px; color:var(--navy); font-weight:800; margin-bottom:3px;}
+.msg.mine{align-self:flex-end; border-radius:16px 16px 4px 16px; background:var(--navy); color:var(--on-navy); box-shadow:none;}
+.msg.mine .who{color:var(--gold);}
+@media(max-width:480px){.chat-panel{right:10px; left:10px; width:auto;} .chat-fab{right:16px;}}
+
+/* admin */
+.admin-wrap{max-width:780px; margin:0 auto; padding:48px 24px 80px; width:100%;}
+.admin-wrap h1{font-size:34px; margin:0 0 6px;}
+.admin-wrap h3{font-size:19px; margin:34px 0 12px;}
+.admin-row{display:flex; align-items:center; justify-content:space-between; gap:12px; background:var(--card); box-shadow:0 0 0 1px var(--line); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:8px; flex-wrap:wrap;}
+.admin-row .who{font-size:14px; font-weight:800;}
+.admin-row .sub2{font-size:12px; color:var(--sub);}
+.admin-row .acts{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+.admin-row input[type=file]{width:auto; padding:6px; font-size:12px;}
+.btn-sm{padding:7px 14px; font-size:12.5px;}
+
+footer{background:var(--hero-2); border-top:3px solid var(--gold); padding:34px 24px; text-align:center; color:#9AA1C8; font-size:13.5px; font-weight:600;}
+
+/* ===== POLISH LAYER ===== */
+:root{--ease:cubic-bezier(.22,1,.36,1);}
+::selection{background:var(--gold); color:#241a04;}
+html{scrollbar-width:thin; scrollbar-color:var(--navy) transparent;}
+.progress{position:fixed; top:0; left:0; height:3px; width:100%; transform-origin:0 50%; transform:scaleX(var(--p,0)); background:linear-gradient(90deg,var(--gold),#fff3d1,var(--gold)); z-index:60; pointer-events:none;}
+header{transition:box-shadow .3s var(--ease), background .3s;}
+header.scrolled{box-shadow:0 12px 30px -18px rgba(14,20,51,.45);}
+.logo-img{transition:transform .4s var(--ease);} .logo:hover .logo-img{transform:rotate(-4deg) scale(1.06);}
+
+/* page transitions */
+.view.active{animation:viewIn .55s var(--ease) both;}
+@keyframes viewIn{from{opacity:0; translate:0 22px; filter:blur(6px);}to{opacity:1; translate:0 0; filter:blur(0);}}
+
+/* hero */
+.hero::before,.hero::after{content:''; position:absolute; z-index:-1; border-radius:50%; filter:blur(70px); pointer-events:none;}
+.hero::before{width:460px; height:460px; right:-120px; top:-140px; background:#3A4CD0; opacity:.5; animation:orb 14s ease-in-out infinite alternate;}
+.hero::after{width:380px; height:380px; left:-120px; bottom:60px; background:var(--gold); opacity:.22; animation:orb 17s ease-in-out infinite alternate-reverse;}
+@keyframes orb{to{transform:translate(70px,50px) scale(1.18);}}
+.hero .spot{position:absolute; inset:0; z-index:-1; pointer-events:none; background:radial-gradient(420px circle at var(--mx,70%) var(--my,30%), rgba(255,255,255,.10), transparent 60%);}
+.hero h1{background:linear-gradient(180deg,#fff 30%,#C9D0F5); -webkit-background-clip:text; background-clip:text; color:transparent; animation:heroIn 1s var(--ease) both;}
+.hero p{animation:heroIn 1s .12s var(--ease) both;} .hero-ctas{animation:heroIn 1s .22s var(--ease) both;}
+.searchbar,.chips{animation:heroIn 1s .32s var(--ease) both;}
+@keyframes heroIn{from{opacity:0; translate:0 30px;}to{opacity:1; translate:0 0;}}
+.searchbar{transition:box-shadow .25s, transform .25s var(--ease);} .searchbar:focus-within{transform:scale(1.02);}
+.chip{transition:transform .2s var(--ease), background .2s, border-color .2s;} .chip:hover{transform:translateY(-2px);} .chip.active{box-shadow:0 8px 22px -8px var(--gold);}
+.sp{transition:translate .35s var(--ease), filter .3s;} .sp:hover{translate:0 -14px; filter:brightness(1.18);}
+
+/* buttons */
+.btn{position:relative; overflow:hidden; transition:transform .25s var(--ease), box-shadow .25s, background .2s, border-color .2s;}
+.btn:hover{transform:translateY(-2px);} .btn:active{transform:scale(.95);}
+.btn-primary:hover{box-shadow:0 14px 28px -10px var(--navy);}
+.btn-mustard::after,.btn-primary::after{content:''; position:absolute; top:0; left:-70%; width:50%; height:100%; background:linear-gradient(100deg,transparent,rgba(255,255,255,.4),transparent); transform:skewX(-20deg); transition:left .6s var(--ease);}
+.btn:hover::after{left:130%;}
+
+/* how / why */
+.how-list li{opacity:0; translate:0 26px; transition:opacity .7s var(--ease), translate .7s var(--ease), background .3s;}
+.how-list li.in{opacity:1; translate:0 0;} .how-list li:nth-child(2){transition-delay:.1s;} .how-list li:nth-child(3){transition-delay:.2s;} .how-list li:nth-child(4){transition-delay:.3s;}
+.how-list .n{background:linear-gradient(135deg,var(--gold-ink),var(--gold)); -webkit-background-clip:text; background-clip:text; color:transparent; transition:transform .4s var(--ease);}
+.how-list li:hover .n{transform:translateX(6px) scale(1.06);}
+.why{position:relative; overflow:hidden;} .why::before{content:'“'; position:absolute; right:4%; top:-40px; font:800 320px/1 var(--display); color:var(--gold); opacity:.22; pointer-events:none;}
+
+/* cards */
+.card{transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty,0px)); transition:transform .25s var(--ease), box-shadow .3s; animation:cardIn .7s var(--ease) both; animation-delay:calc(min(var(--k,0),12) * 55ms); will-change:transform;}
+.card:hover{--ty:-8px; transform:perspective(900px) rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateY(var(--ty)); box-shadow:0 28px 50px -22px rgba(14,20,51,.5), 0 0 0 1px var(--c);}
+@keyframes cardIn{from{opacity:0; translate:0 36px; scale:.96;}to{opacity:1; translate:0 0; scale:1;}}
+.cover::after{content:''; position:absolute; inset:0; background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,.28) 50%,transparent 65%); transform:translateX(-120%); transition:transform .8s var(--ease);}
+.card:hover .cover::after{transform:translateX(120%);}
+.price{transition:transform .3s var(--ease); display:inline-block;} .card:hover .price{transform:scale(1.12);}
+.grid-head h2{position:relative;} .grid-head h2::after{content:''; display:block; width:56px; height:5px; border-radius:5px; background:var(--gold); margin-top:10px;}
+
+/* modals, chat, contact */
+.overlay .modal{transform:translateY(40px) scale(.92); opacity:0; transition:transform .5s var(--ease), opacity .3s;}
+.overlay.show .modal{transform:none; opacity:1;}
+.close-x{transition:transform .3s var(--ease), background .2s;} .close-x:hover{transform:rotate(90deg); background:var(--line);}
+.chat-fab{animation:fabPulse 2.8s infinite;} @keyframes fabPulse{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--gold) 60%,transparent), var(--shadow-lg);}70%,100%{box-shadow:0 0 0 18px transparent, var(--shadow-lg);}}
+.chat-fab:hover{transform:scale(1.1) rotate(-8deg); animation:none;}
+.chat-panel{transition:opacity .35s var(--ease), transform .45s var(--ease);}
+.msg{animation:msgIn .4s var(--ease) both;} @keyframes msgIn{from{opacity:0; translate:0 10px; scale:.96;}}
+.contact-row{transition:box-shadow .25s, transform .3s var(--ease);} .contact-row:hover{transform:translateX(8px);}
+.contact-creator{background:linear-gradient(135deg,var(--hero),#26399E); position:relative; overflow:hidden;}
+.contact-creator::after{content:''; position:absolute; right:-40px; top:-40px; width:150px; height:150px; border-radius:50%; background:var(--gold); opacity:.18; filter:blur(20px);}
+.contact-avatar{animation:fabPulse 3s infinite;}
+.about-steps li{transition:transform .3s var(--ease), box-shadow .3s;} .about-steps li:hover{transform:translateX(6px); box-shadow:0 0 0 1px var(--gold), var(--shadow-md);}
+footer{background:linear-gradient(180deg,var(--hero-2),#050718);}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;} .how-list li{opacity:1; translate:none;}}
+
+/* ===== BOOK SCENE ===== */
+.bookscene{position:relative; height:230vh; background:linear-gradient(180deg,var(--hero-2),var(--hero) 50%,var(--bg));}
+.bs-stick{position:sticky; top:0; height:100vh; display:flex; align-items:center; justify-content:center; overflow:hidden; perspective:1600px;}
+.bs-glow{position:absolute; width:520px; height:520px; border-radius:50%; background:var(--gold); filter:blur(110px); opacity:calc(var(--o,0) * .35); pointer-events:none;}
+.book{--p:0; position:relative; width:min(300px,64vw); aspect-ratio:3/4; transform-style:preserve-3d; transform:translateX(calc(var(--p) * min(150px,32vw))) rotateX(calc(14deg - var(--p) * 14deg)) rotateY(calc(-24deg + var(--p) * 24deg)) scale(calc(.85 + var(--p) * .15));}
+.book>div{position:absolute; inset:0; border-radius:4px 14px 14px 4px;}
+.bk-back{background:#B8811F; transform:translateZ(-14px); box-shadow:0 50px 70px -30px rgba(0,0,0,.7);}
+.bk-pages{background:#FBF6E6; transform:translateZ(-4px); display:flex; align-items:center; justify-content:center; box-shadow:inset 8px 0 14px -8px rgba(0,0,0,.25);}
+.bk-page-in{text-align:center; color:#2a1d04; opacity:calc((var(--p) - .45) * 3);}
+.bk-page-in small{display:block; font:800 13px var(--body); letter-spacing:.35em; color:#8a6410;}
+.bk-page-in strong{display:block; font:800 clamp(44px,9vw,66px)/1.1 var(--display); letter-spacing:-.03em; margin:10px 0 12px;}
+.bk-page-in i{display:block; width:56px; height:4px; margin:0 auto; border-radius:4px; background:var(--gold);}
+.bk-cover{transform-origin:left center; transform-style:preserve-3d; transform:rotateY(calc(var(--p) * -168deg)); border-radius:4px 14px 14px 4px;}
+.bk-front,.bk-inside{position:absolute; inset:0; border-radius:inherit; backface-visibility:hidden; -webkit-backface-visibility:hidden;}
+.bk-front{background:linear-gradient(150deg,#FFD25A,#F2B22E 55%,#D9951A); box-shadow:inset 10px 0 0 rgba(0,0,0,.16), inset 12px 0 0 rgba(255,255,255,.25); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#2a1d04;}
+.bk-front b{font:800 clamp(38px,8.5vw,58px)/1 var(--display); letter-spacing:-.04em;}
+.bk-front em{font:700 13px var(--body); font-style:normal; letter-spacing:.14em; text-transform:uppercase; opacity:.75;}
+.bk-line{position:absolute; left:22px; top:22px; width:44px; height:5px; background:#2a1d04; box-shadow:0 10px 0 #2a1d04; border-radius:3px; opacity:.85;} .bk-line.l2{display:none;}
+.bk-inside{background:linear-gradient(90deg,#E6A928,#F7CB6A); transform:rotateY(180deg);}
+@media(prefers-reduced-motion:reduce){.book{--p:1;}}
+
+/* ===== SHOCK EFFECTS ===== */
+.hero h1{will-change:transform;} .sp{will-change:transform;}
+.mq{overflow:hidden; padding:80px 0 60px; background:var(--bg); display:grid; gap:8px;}
+.mq-row{white-space:nowrap; font:800 clamp(64px,14vw,190px)/1 var(--display); letter-spacing:-.04em; will-change:transform;}
+.mq-row.o{color:transparent; -webkit-text-stroke:2px var(--ink);} .mq-row.g{color:var(--gold);}
+.lit{padding:60px 24px 120px; background:var(--bg); display:flex; justify-content:center;}
+.lit p{max-width:20ch; margin:0; font:800 clamp(26px,4.2vw,52px)/1.15 var(--display); letter-spacing:-.035em; text-wrap:balance;}
+.lit .w{opacity:.14; transition:opacity .25s, color .25s;} .lit .w.on{opacity:1;} .lit .w.hot.on{color:var(--gold-ink);}
+.rain{position:relative; height:260vh; background:var(--hero-2); color:#fff;}
+.rain-stick{position:sticky; top:0; height:100vh; overflow:hidden; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding-top:9vh;}
+.rain-stick h2{font-size:clamp(26px,4.6vw,54px); margin:0; letter-spacing:-.04em; text-align:center; position:relative; z-index:2; padding:0 20px;}
+.pile{position:absolute; left:50%; bottom:0; width:0; height:100%;}
+.bk{position:absolute; left:0; bottom:0; height:var(--bh); width:var(--bw); margin-left:calc(var(--bw) / -2); background:var(--bc); border-radius:3px; box-shadow:inset 0 -4px 0 rgba(0,0,0,.25), inset 0 3px 0 rgba(255,255,255,.18); display:flex; align-items:center; justify-content:center; font:800 12px var(--display); letter-spacing:.14em; color:rgba(255,255,255,.9); will-change:transform;}
+.bk::before,.bk::after{content:''; position:absolute; top:0; bottom:0; width:5px; background:var(--gold); opacity:.9;} .bk::before{left:14px;} .bk::after{right:14px;}
+.how-list li{transform-origin:50% 0; transform:perspective(900px) rotateX(-80deg); transition:opacity .8s var(--ease), translate .8s var(--ease), transform .9s var(--ease);}
+.how-list li.in{transform:none;}
+@media(prefers-reduced-motion:reduce){.how-list li{transform:none;} .lit .w{opacity:1;}}
+
+/* ===== FLYING BOOK ===== */
+.flyer{position:fixed; left:0; top:0; z-index:30; pointer-events:none; display:none; border-radius:3px 12px 12px 3px; overflow:hidden; will-change:transform,width,height;
+ background:linear-gradient(150deg,#FFD25A,#F2B22E 55%,#D9951A); box-shadow:inset 8px 0 0 rgba(0,0,0,.16), inset 10px 0 0 rgba(255,255,255,.25), 0 40px 60px -22px rgba(0,0,0,.65), 0 0 60px rgba(255,200,80,.35);}
+.flyer span{position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; color:#2a1d04;}
+.fl-spine{font:800 12px var(--display); letter-spacing:.1em;} .fl-spine b{writing-mode:vertical-rl; transform:rotate(180deg);}
+.fl-cover b{font:800 clamp(38px,8.5vw,58px)/1 var(--display); letter-spacing:-.04em;} .fl-cover em{font:700 13px var(--body); font-style:normal; letter-spacing:.14em; text-transform:uppercase; opacity:.75;}
+.flyer i{position:absolute; left:0; right:0; top:16px; height:3px; background:#2a1d04; box-shadow:0 8px 0 #2a1d04; opacity:.8;}
+.bs-rays{position:absolute; width:1100px; height:1100px; border-radius:50%; opacity:calc(var(--o,0) * .5); pointer-events:none; background:repeating-conic-gradient(from 0deg, rgba(255,210,90,.55) 0 5deg, transparent 5deg 15deg); -webkit-mask:radial-gradient(circle,#000 0,transparent 68%); mask:radial-gradient(circle,#000 0,transparent 68%); animation:spinR 30s linear infinite;}
+@keyframes spinR{to{transform:rotate(360deg);}}
+
+/* ===== MOBILE LAYER ===== */
+html{-webkit-text-size-adjust:100%; text-size-adjust:100%;}
+html,body{max-width:100%; overflow-x:clip;}
+a,button,.chip,.tab,.pagenav span,.contact-row,.chat-fab{-webkit-tap-highlight-color:transparent; touch-action:manipulation;}
+img{max-width:100%;}
+.btn,.chip,.tab,.pagenav span,.langsw button,.close-x,.chat-panel-close{min-height:44px;}
+.close-x,.chat-panel-close{min-width:44px; display:inline-flex; align-items:center; justify-content:center;}
+
+/* hover effects must not stick on touch screens */
+@media (hover:none){
+  .card:hover,.btn:hover,.chip:hover,.sp:hover,.contact-row:hover,.about-steps li:hover,.how-list li:hover .n,.close-x:hover,.chat-fab:hover,.logo:hover .logo-img,.card:hover .price{transform:none; translate:none; filter:none;}
+  .card:hover{box-shadow:var(--shadow-sm), 0 0 0 1px var(--line);}
+  .card:hover .cover::after,.btn:hover::after{transform:translateX(-120%); left:-70%;}
+  .card{will-change:auto; transform:none;}
+}
+
+@media (max-width:820px){
+  /* iOS zoom-a qarşı: input şrifti ≥16px */
+  input,select,textarea{font-size:16px;}
+  .searchbar input[type=text]{font-size:16px;}
+  .wrap{padding:0 18px;}
+
+  /* header: yığcam, 2 sətir */
+  .hd-row{padding:8px 14px; gap:8px; flex-wrap:wrap; align-items:center; justify-content:space-between;}
+  .logo-img{height:34px;}
+  .logo-text span:first-child{font-size:17px;}
+  .logo-text span:last-child{font-size:9.5px;}
+  .hd-right{gap:8px; margin-left:auto; flex-wrap:wrap; justify-content:flex-end;}
+  .langsw button{min-height:34px; padding:4px 10px;}
+  .pagenav{order:3; width:100%; flex:none; justify-content:flex-start; gap:6px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; margin:0 -14px; padding:0 14px 2px; width:calc(100% + 28px);}
+  .pagenav::-webkit-scrollbar{display:none;}
+  .pagenav span{flex:none; padding:10px 12px; font-size:14px; min-height:42px; display:inline-flex; align-items:center;}
+  .pagenav span::after{left:12px; right:12px; bottom:2px;}
+  #navArea{gap:8px; flex-wrap:nowrap;}
+  .pill-user{max-width:150px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; font-size:12.5px; padding:6px 10px;}
+  #navArea .btn{padding:8px 14px; font-size:13px; min-height:38px; white-space:nowrap;}
+}
+@media (max-width:520px){
+  .hd-row{flex-direction:row; align-items:center;}
+  .logo-text{display:none;}
+  .logo-img{height:36px;}
+  .pill-user{display:none;}
+  header.scrolled{box-shadow:0 8px 20px -14px rgba(14,20,51,.5);}
+}
+
+/* hero */
+@media (max-width:820px){
+  .hero{padding:44px 0 0;}
+  .hero h1{font-size:clamp(36px,11.5vw,56px); line-height:1; max-width:11ch; margin-bottom:16px;}
+  .hero p{font-size:15.5px; margin-bottom:22px;}
+  .hero-ctas{gap:10px; margin-bottom:20px;}
+  .hero-ctas .btn{flex:1 1 150px; padding:14px 18px;}
+  .searchbar{max-width:100%;}
+  .searchbar input[type=text]{padding:13px 16px;}
+  .chips{flex-wrap:nowrap; overflow-x:auto; margin:16px -18px 0; padding:2px 18px 6px; scrollbar-width:none; -webkit-overflow-scrolling:touch;}
+  .chips::-webkit-scrollbar{display:none;}
+  .chip{flex:none; padding:10px 16px; min-height:40px;}
+  .hero::before{width:280px; height:280px; filter:blur(50px);}
+  .hero::after{width:240px; height:240px; filter:blur(50px);}
+  .hero .spot{display:none;}
+  .shelf{margin-top:40px; padding:0 14px 16px; gap:3px; justify-content:center; overflow:hidden;}
+  .sp{transform-origin:bottom center;}
+  .sp.lean{margin-right:18px;}
+  .sp b{font-size:10.5px;}
+}
+@media (max-width:520px){
+  .shelf{gap:2px; padding:0 8px 14px;}
+  .sp{width:calc(var(--w) * .78); height:calc(var(--h) * .72);}
+  .sp::before{top:12px;}
+  .sp.lean{margin-right:12px;}
+  .sp:nth-child(n+9){display:none;}
+}
+
+/* sticky səhnələr: mobil brauzer alətlər panelinə uyğun (svh) */
+.bs-stick,.rain-stick{height:100vh; height:100svh;}
+@media (max-width:820px){
+  .bookscene{height:200vh; height:200svh;}
+  .rain{height:230vh; height:230svh;}
+  .bs-glow{width:320px; height:320px; filter:blur(70px);}
+  .bs-rays{width:640px; height:640px;}
+  .lit{padding:48px 20px 90px;}
+  .lit p{max-width:100%; font-size:clamp(26px,8vw,40px);}
+  .rain-stick{padding-top:8svh;}
+  .rain-stick h2{font-size:clamp(24px,7vw,36px);}
+  .bk{font-size:10.5px; letter-spacing:.1em; max-width:92vw;}
+  .book{width:min(260px,62vw);}
+}
+
+/* how / why */
+@media (max-width:820px){
+  .how{padding:56px 18px 12px;}
+  .how h2{margin-bottom:26px;}
+  .how-list .n{font-size:48px; margin-bottom:8px;}
+  .how-list p{max-width:none; font-size:15px;}
+  .how-list li{padding:18px 0;}
+  .why{margin-top:48px;}
+  .why .wrap{padding-top:44px; padding-bottom:48px;}
+  .why::before{font-size:200px; top:-20px; right:2%;}
+}
+
+/* elanlar */
+@media (max-width:820px){
+  main{padding:28px 16px 100px;}
+  .grid-head{margin-bottom:18px; padding-bottom:10px; flex-wrap:wrap; gap:6px;}
+  .grid{grid-template-columns:repeat(2,minmax(0,1fr)); gap:16px 12px;}
+  .cover{height:118px; padding:16px 12px 12px 20px;}
+  .cover::before{left:20px; top:14px; width:26px;}
+  .cover span{font-size:14.5px;}
+  .card > *:not(.cover){margin-left:12px; margin-right:12px;}
+  .card .meta:first-of-type{font-size:13px;}
+  .meta{font-size:12px;}
+  .price{font-size:17px;}
+  .contact-btn,.pdf-link{width:calc(100% - 24px); padding:11px 12px; font-size:13px;}
+  .row-between{flex-wrap:wrap;}
+}
+@media (max-width:360px){
+  .grid{grid-template-columns:1fr;}
+}
+
+/* modallar: aşağıdan çıxan "bottom sheet" */
+@media (max-width:620px){
+  .overlay{align-items:flex-end; padding:0; padding-top:max(24px, env(safe-area-inset-top,0px));}
+  .overlay .modal{max-width:none; width:100%; max-height:calc(100svh - 24px); overflow-y:auto; -webkit-overflow-scrolling:touch; border-radius:24px 24px 0 0; padding:30px 20px calc(24px + env(safe-area-inset-bottom,0px)); transform:translateY(60px); }
+  .overlay.show .modal{transform:none;}
+  .modal h2{font-size:22px; padding-right:44px;}
+  .modal-actions{position:sticky; bottom:0;}
+  textarea{min-height:90px;}
+  label{margin:12px 0 6px;}
+}
+
+/* about / contact / admin */
+@media (max-width:620px){
+  .about-wrap{padding:36px 18px 70px;}
+  .about-wrap p{font-size:15.5px; line-height:1.7;}
+  .about-wrap h3{font-size:20px; margin:30px 0 12px;}
+  .about-steps li{padding:13px 14px; font-size:15px;}
+  .contact-creator{padding:16px; gap:14px;}
+  .contact-row{padding:14px;}
+  .contact-row > div{min-width:0;}
+  .contact-row .cval{overflow-wrap:anywhere;}
+  .admin-wrap{padding:32px 16px 70px;}
+  .admin-wrap h1{font-size:28px;}
+  .admin-row{flex-direction:column; align-items:stretch;}
+  .admin-row .acts{width:100%;}
+  .admin-row .acts .btn{flex:1;}
+  .admin-row input[type=file]{width:100%;}
+  #vipUserInput{min-width:0 !important; width:100%;}
+  footer{padding:28px 18px calc(28px + env(safe-area-inset-bottom,0px)); font-size:13px;}
+}
+
+/* chat */
+@media (max-width:620px){
+  .chat-fab{right:14px; bottom:calc(14px + env(safe-area-inset-bottom,0px)); width:56px; height:56px;}
+  .chat-panel{left:0; right:0; bottom:0; width:100%; max-width:none; height:min(78svh,620px); max-height:calc(100svh - 60px); border-radius:24px 24px 0 0; padding-bottom:env(safe-area-inset-bottom,0px);}
+  .chat-input{padding:10px 12px;}
+  .chat-input input{font-size:16px; min-width:0;}
+  .msg{max-width:88%; overflow-wrap:anywhere;}
+}
+
+/* yüngül animasiyalar: zəif cihazlarda batareya və FPS üçün */
+@media (max-width:820px){
+  .chat-fab{animation:none;}
+  .contact-avatar{animation:none;}
+  .view.active{animation-duration:.35s;}
+  .view.active{filter:none;}
+  @keyframes viewIn{from{opacity:0; translate:0 14px;}to{opacity:1; translate:0 0;}}
+  .card{animation-duration:.5s;}
+  header{backdrop-filter:blur(10px) saturate(150%); -webkit-backdrop-filter:blur(10px) saturate(150%);}
+}
+@media (max-width:820px) and (orientation:landscape){
+  .bs-stick,.rain-stick{height:100vh; height:100svh;}
+  .hero{padding-top:28px;}
+  .hero h1{font-size:clamp(30px,7vw,44px);}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="hd-row">
+    <div class="logo"><svg class="logo-mark" viewBox="0 0 48 48" role="img" aria-label="Bookal"><rect width="48" height="48" rx="12" fill="#16215B"/><path d="M12 14.5c4.5-1.6 8.7-1.2 12 1.2v18.2c-3.3-2.4-7.5-2.8-12-1.2z" fill="#D9A441"/><path d="M36 14.5c-4.5-1.6-8.7-1.2-12 1.2v18.2c3.3-2.4 7.5-2.8 12-1.2z" fill="#F6E8CB"/></svg><div class="logo-text"><span>Bookal</span><span>KİTAB PLATFORMASI</span></div></div>
+    <div class="pagenav">
+      <span class="active" id="pnHome" onclick="switchView('home')"></span>
+      <span id="pnElanlar" onclick="switchView('elanlar')" style="display:none;"></span>
+      <span id="pnAbout" onclick="switchView('about')"></span>
+      <span id="pnContact" onclick="switchView('contact')"></span>
+      <span id="pnAdmin" onclick="switchView('admin')" style="display:none;"></span>
+    </div>
+    <div class="hd-right">
+      <div class="langsw" id="langSwitch">
+        <button onclick="setLang('az')" id="langAz">AZ</button>
+        <button onclick="setLang('tr')" id="langTr">TR</button>
+        <button onclick="setLang('en')" id="langEn">EN</button>
+      </div>
+      <nav id="navArea"></nav>
+    </div>
+  </div>
+</header>
+
+<div class="view active" id="viewHome">
+<section class="hero">
+  <div class="wrap">
+    <h1 id="heroTitle"></h1>
+    <p id="heroSub"></p>
+    <div class="hero-ctas">
+      <button class="btn btn-mustard" id="browseBtn" onclick="scrollToGrid()"></button>
+      <button class="btn btn-ghost" id="postAdBtnHero" onclick="postAdClick()"></button>
+    </div>
+    <div class="searchbar"><input type="text" id="searchInput" inputmode="search" enterkeyhint="search" autocomplete="off" autocapitalize="none"></div>
+    <div class="chips" id="chipRow"></div>
+  </div>
+  <div class="shelf" aria-hidden="true"><i class="sp" style="--w:32px;--h:120px;--c:#2B3A8C;--i:0"><b>Calculus</b></i><i class="sp" style="--w:42px;--h:154px;--c:#D9A441;--i:1"><b>Physics</b></i><i class="sp" style="--w:26px;--h:124px;--c:#A63A4E;--i:2"><b>Ədəbiyyat</b></i><i class="sp" style="--w:44px;--h:182px;--c:#17706E;--i:3"><b>Algorithms</b></i><i class="sp" style="--w:32px;--h:136px;--c:#16215B;--i:4"><b>Mechanics</b></i><i class="sp lean" style="--w:34px;--h:204px;--c:#6B4FA3;--i:5"><b>English</b></i><i class="sp" style="--w:34px;--h:114px;--c:#3A4BA8;--i:6"><b>Circuits</b></i><i class="sp out" style="--w:44px;--h:200px;--c:#E9B857;--i:7"><b>Bookal</b></i><i class="sp" style="--w:38px;--h:146px;--c:#D9A441;--i:8"><b>Chemistry</b></i><i class="sp" style="--w:28px;--h:190px;--c:#A63A4E;--i:9"><b>Materials</b></i><i class="sp" style="--w:38px;--h:164px;--c:#2B3A8C;--i:10"><b>Statistics</b></i><i class="sp" style="--w:30px;--h:176px;--c:#17706E;--i:11"><b>Thermo</b></i><i class="sp" style="--w:34px;--h:130px;--c:#6B4FA3;--i:12"><b>Design</b></i><i class="sp" style="--w:32px;--h:226px;--c:#3A4BA8;--i:13"><b>Networks</b></i><i class="sp" style="--w:38px;--h:140px;--c:#D9A441;--i:14"><b>Robotics</b></i><i class="sp" style="--w:32px;--h:120px;--c:#2B3A8C;--i:15"><b>Calculus</b></i><i class="sp" style="--w:36px;--h:168px;--c:#D9A441;--i:16"><b>Physics</b></i><i class="sp" style="--w:30px;--h:124px;--c:#A63A4E;--i:17"><b>Ədəbiyyat</b></i><i class="sp" style="--w:40px;--h:182px;--c:#17706E;--i:18"><b>Algorithms</b></i><i class="sp" style="--w:32px;--h:172px;--c:#16215B;--i:19"><b>Mechanics</b></i><i class="sp" style="--w:40px;--h:192px;--c:#6B4FA3;--i:20"><b>English</b></i><i class="sp lean" style="--w:34px;--h:150px;--c:#3A4BA8;--i:21"><b>Circuits</b></i><i class="sp" style="--w:46px;--h:224px;--c:#101848;--i:22"><b>Bookal</b></i><i class="sp" style="--w:34px;--h:160px;--c:#D9A441;--i:23"><b>Chemistry</b></i><i class="sp" style="--w:30px;--h:176px;--c:#A63A4E;--i:24"><b>Materials</b></i><i class="sp" style="--w:42px;--h:164px;--c:#2B3A8C;--i:25"><b>Statistics</b></i><i class="sp" style="--w:34px;--h:198px;--c:#17706E;--i:26"><b>Thermo</b></i><i class="sp" style="--w:38px;--h:116px;--c:#6B4FA3;--i:27"><b>Design</b></i><i class="sp" style="--w:28px;--h:226px;--c:#3A4BA8;--i:28"><b>Networks</b></i><i class="sp" style="--w:38px;--h:164px;--c:#D9A441;--i:29"><b>Robotics</b></i></div>
+</section>
+<section class="bookscene" id="bookScene" aria-label="Bookal">
+  <div class="bs-stick">
+    <div class="bs-rays"></div><div class="bs-glow"></div>
+    <div class="book" id="bigBook">
+      <div class="bk-back"></div>
+      <div class="bk-pages"><div class="bk-page-in"><small>Bookal</small><strong><small>Hər kitabın yeni bir oxucusu var.</small></strong><i></i></div></div>
+      <div class="bk-cover"><div class="bk-front"><span class="bk-line"></span><span class="bk-line l2"></span><b>Bookal</b><em>Kitab platforması</em></div><div class="bk-inside"></div></div>
+    </div>
+  </div>
+</section>
+<section class="lit"><p id="litP">Hər kitab bir oxucunun əlindən başqa oxucunun əlinə keçəndə yenidən həyata qayıdır.</p></section>
+<section class="rain" id="rain"><div class="rain-stick"><h2 id="rainH">Kitab yığını böyüyür.</h2><div class="pile" id="pile"></div></div></section>
+<section class="wrap how">
+  <h2 id="homeHowH"></h2>
+  <ol class="how-list">
+    <li><span class="n">1</span><p id="homeStep1"></p></li>
+    <li><span class="n">2</span><p id="homeStep2"></p></li>
+    <li><span class="n">3</span><p id="homeStep3"></p></li>
+    <li><span class="n">4</span><p id="homeStep4"></p></li>
+  </ol>
+</section>
+<section class="why"><div class="wrap"><h2 id="homeWhyH"></h2><p id="homeWhyP"></p></div></section>
+
+
+</div>
+
+<div class="view" id="viewElanlar">
+<main class="wrap" id="gridSection">
+  <div class="grid-head">
+    <h2 id="listingsTitle"></h2>
+    <span class="count" id="countLabel"></span>
+  </div>
+  <div class="grid" id="grid"></div>
+  <div class="empty" id="emptyMsg" style="display:none;"></div>
+</main>
+</div>
+
+<div class="view" id="viewAbout">
+  <div class="about-wrap">
+    <h1 id="aboutTitle"></h1>
+    <p id="aboutP1"></p>
+    <p id="aboutP2"></p>
+    <h3 id="aboutH1"></h3>
+    <ul class="about-steps">
+      <li id="aboutStep1"></li>
+      <li id="aboutStep2"></li>
+      <li id="aboutStep3"></li>
+      <li id="aboutStep4"></li>
+    </ul>
+    <h3 id="aboutH2"></h3>
+    <p id="aboutP3"></p>
+    <h3 id="aboutH3"></h3>
+    <p id="aboutCreator"></p>
+  </div>
+</div>
+
+<div class="view" id="viewContact">
+  <div class="about-wrap">
+    <h1 id="contactTitle"></h1>
+    <p id="contactSub"></p>
+    <div class="contact-creator">
+      <div class="contact-avatar">SH</div>
+      <div>
+        <div class="cname">Səməd Hacızadə</div>
+        <div class="crole" id="contactCreatorRole"></div>
+      </div>
+    </div>
+    <a class="contact-row" href="https://instagram.com/haacizade" target="_blank" rel="noopener">
+      <span class="cico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1"/></svg></span>
+      <div><div class="clabel">Instagram</div><div class="cval">@haacizade</div></div>
+    </a>
+    <a class="contact-row" href="https://www.tiktok.com/@hacizadde" target="_blank" rel="noopener">
+      <span class="cico"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 3c.3 2 1.7 3.6 3.7 3.9v2.6c-1.4 0-2.7-.4-3.7-1.2v6.4c0 3-2.4 5.3-5.3 5.3S5.9 17.7 5.9 14.8c0-2.9 2.3-5.2 5.2-5.3v2.7a2.6 2.6 0 1 0 2.7 2.6V3h2.7Z"/></svg></span>
+      <div><div class="clabel">TikTok</div><div class="cval">@hacizadde</div></div>
+    </a>
+    <a class="contact-row" href="tel:0105100915">
+      <span class="cico"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1.9.3 1.8.6 2.7a2 2 0 0 1-.5 2.1L8 9.7a16 16 0 0 0 6 6l1.2-1.2a2 2 0 0 1 2.1-.5c.9.3 1.8.5 2.7.6a2 2 0 0 1 1.7 2Z"/></svg></span>
+      <div><div class="clabel" id="contactPhoneLabel"></div><div class="cval">0105100915</div></div>
+    </a>
+  </div>
+</div>
+
+<div class="chat-panel" id="chatPanel">
+  <div class="chat-panel-head">
+    <span id="chatPanelTitle"></span>
+    <button class="chat-panel-close" onclick="toggleChatWidget(false)">✕</button>
+  </div>
+  <div class="chat-log" id="chatLog"></div>
+  <div class="chat-locked" id="chatLockNotice" style="display:none;"><span id="chatLockText"></span> <a href="javascript:void(0)" onclick="openModal('authOverlay')" style="color:var(--navy); font-weight:800;" id="chatLockLink"></a></div>
+  <div id="chatInputArea" class="chat-input">
+    <input type="text" id="chatMsgInput" enterkeyhint="send" autocomplete="off">
+    <button class="btn btn-primary" id="chatSendBtn" onclick="sendChatMsg()"></button>
+  </div>
+</div>
+<div class="chat-fab" id="chatFab" onclick="toggleChatWidget()">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/></svg>
+</div>
+
+<div class="view" id="viewAdmin">
+  <div class="admin-wrap">
+    <h1 id="adminTitle"></h1>
+    <p class="meta" id="adminSub"></p>
+    <h3 id="adminUsersH"></h3>
+    <div class="admin-row" style="gap:10px;">
+      <input type="text" id="vipUserInput" placeholder="" style="flex:1; min-width:160px;">
+      <button class="btn btn-primary btn-sm" onclick="grantVipByUsername()" id="btnVipGrant"></button>
+    </div>
+    <div class="err" id="vipGrantErr"></div>
+    <div id="adminUsersList"></div>
+    <h3 id="adminListingsH"></h3>
+    <div id="adminListingsList"></div>
+  </div>
+</div>
+
+<footer id="footerText"></footer>
+
+<!-- AUTH MODAL -->
+<div class="overlay" id="authOverlay">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('authOverlay')">✕</button>
+    <div class="tabs">
+      <div class="tab active" id="tabLogin" onclick="switchTab('login')"></div>
+      <div class="tab" id="tabReg" onclick="switchTab('register')"></div>
+    </div>
+    <div id="loginForm">
+      <label id="lblLoginUser"></label><input type="text" id="loginUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <label id="lblLoginPass"></label><input type="password" id="loginPass" autocomplete="current-password">
+      <div class="err" id="loginErr"></div>
+      <div class="modal-actions"><button class="btn btn-primary" style="flex:1" id="btnLogin" onclick="doLogin()"></button></div>
+    </div>
+    <div id="regForm" style="display:none;">
+      <label id="lblRegName"></label><input type="text" id="regName" autocomplete="name">
+      <label id="lblRegFaculty"></label><input type="text" id="regFaculty">
+      <label id="lblRegPhone"></label><input type="tel" id="regPhone" inputmode="tel" autocomplete="tel">
+      <label id="lblRegUser"></label><input type="text" id="regUser" autocomplete="username" autocapitalize="none" autocorrect="off" spellcheck="false">
+      <label id="lblRegPass"></label><input type="password" id="regPass" autocomplete="new-password">
+      <div class="err" id="regErr"></div>
+      <div class="modal-actions"><button class="btn btn-primary" style="flex:1" id="btnReg" onclick="doRegister()"></button></div>
+    </div>
+  </div>
+</div>
+
+<!-- POST AD MODAL -->
+<div class="overlay" id="adOverlay">
+  <div class="modal">
+    <button class="close-x" onclick="closeModal('adOverlay')">✕</button>
+    <h2 id="adModalTitle"></h2>
+    <p class="sub" id="adModalSub"></p>
+    <label id="lblAdTitle"></label><input type="text" id="adTitle">
+    <label id="lblAdAuthor"></label><input type="text" id="adAuthor">
+    <label id="lblAdCat"></label>
+    <select id="adCat"></select>
+    <label id="lblAdCond"></label>
+    <select id="adCond"></select>
+    <label id="lblAdPrice"></label><input type="number" id="adPrice" min="0" value="0" inputmode="decimal">
+    <label id="lblAdDesc"></label><textarea id="adDesc"></textarea>
+    <div class="err" id="adErr"></div>
+    <div class="modal-actions"><button class="btn btn-primary" style="flex:1" id="btnAdSubmit" onclick="submitAd()"></button></div>
+  </div>
+</div>
+
+<script>
+const I18N = {
+  az: {
+    nav_home:'Ana səhifə', nav_elanlar:'Elanlar', nav_about:'Haqqında', nav_chat:'Söhbət', nav_contact:'Əlaqə', browse_btn:'Elanlara bax',
+    nav_login:'Giriş / Qeydiyyat', nav_logout:'Çıxış',
+    hero_title:'Köhnə kitablarına yeni sahib tap',
+    hero_sub:'Oxuyub bitirdiyin kitabları paylaş, axtardığını tap. İstifadə olunmuş kitabların mübadiləsi və satışı üçün hamıya açıq elan lövhəsi.',
+    search_ph:'Kitab adı, müəllif və ya fənn axtar...',
+    post_btn:'+ Elan yerləşdir',
+    cat_all:'Hamısı', cat_textbook:'Dərslik', cat_fiction:'Bədii ədəbiyyat', cat_science:'Elmi', cat_language:'Dil öyrənmə', cat_other:'Digər',
+    listings_title:'Elanlar', listings_count:' elan',
+    empty:'Hələ elan yoxdur. İlk elanı sən yerləşdir!',
+    author_unknown:'Müəllif qeyd olunmayıb', free:'Pulsuz', contact_btn:'Satıcı ilə əlaqə',
+    contact_need_login:'Satıcının əlaqə məlumatını görmək üçün daxil ol.',
+    contact_seller:'Satıcı', contact_phone:'Telefon', contact_none:'Qeyd olunmayıb',
+    footer:'Bookal — oxucudan oxucuya, sadə və pulsuz.',
+    tab_login:'Giriş', tab_reg:'Qeydiyyat',
+    login_user:'İstifadəçi adı', login_pass:'Şifrə', login_btn:'Daxil ol',
+    reg_name:'Ad Soyad', reg_faculty:'Universitet / Şəhər', reg_faculty_ph:'Məs: AZTU, Bakı',
+    reg_phone:'Telefon', reg_phone_ph:'050 123 45 67', reg_user:'İstifadəçi adı', reg_pass:'Şifrə', reg_btn:'Qeydiyyatdan keç',
+    err_fill_all:'Bütün vacib xanaları doldur.', err_conn:'Bağlantı hazır deyil, bir az sonra cəhd et.',
+    err_exists:'Bu istifadəçi adı artıq mövcuddur.', err_generic:'Xəta baş verdi. Yenidən cəhd et.',
+    err_need_user_pass:'İstifadəçi adı və şifrəni daxil et.', err_wrong:'İstifadəçi adı və ya şifrə yanlışdır.',
+    ad_modal_title:'Yeni elan', ad_modal_sub:'Kitabının məlumatlarını daxil et.',
+    ad_title:'Kitabın adı', ad_author:'Müəllif', ad_category:'Kateqoriya', ad_condition:'Vəziyyəti',
+    ad_price:'Qiymət (AZN, 0 = pulsuz)', ad_desc:'Qeyd', ad_desc_ph:'Əlavə məlumat...', ad_submit:'Elanı yerləşdir',
+    ad_err_title:'Kitabın adını daxil et.', ad_err_conn:'Bağlantı hazır deyil.', ad_err_fail:'Elan yerləşdirilə bilmədi. Yenidən cəhd et.',
+    cond_like_new:'Yeni kimi', cond_good:'Yaxşı', cond_fair:'Orta',
+    about_title:'Bookal haqqında',
+    about_p1:'Bu platforma hər kəs üçün yaradılıb. Məqsəd sadədir: kitabı artıq lazım olmayan insanlarla, həmin kitabı məhz indi axtaranları bir yerə gətirmək.',
+    about_p2:'Sayt tap.az və ya lalafo.az kimi elan lövhəsi məntiqi ilə işləyir — sadəcə burada yalnız kitablar var və hamı istifadə edə bilər.',
+    about_h1:'Necə işləyir',
+    about_s1:'1. Qeydiyyatdan keç və ya hesabına daxil ol.',
+    about_s2:'2. Lazımsız kitabını qiymət və vəziyyəti ilə birlikdə elan et.',
+    about_s3:'3. Axtaranlar kateqoriya və axtarış üzrə kitabı tapır.',
+    about_s4:'4. "Satıcı ilə əlaqə" düyməsindən əlaqə nömrəsini görüb birbaşa razılaşırsınız.',
+    about_h2:'Niyə lazımdır',
+    about_p3:'Hər semestr onlarla dərslik zibilə atılır və ya rəflərdə toz yığır, halbuki kimsə məhz o kitabı pul verib yenisini almaq üzrədir. Bu sayt həmin itkini azaltmaq üçündür.',
+    about_h3:'Kim yaradıb', about_creator:'Bu platforma Səməd Hacızadə tərəfindən, hər kəsə fayda vermək məqsədilə yaradılıb və inkişaf etdirilir.',
+    contact_title:'Əlaqə', contact_sub:'Sualın, təklifin və ya əməkdaşlıq fikrin varsa, birbaşa yaza bilərsən.',
+    contact_creator_role:'Platformanın yaradıcısı', contact_phone_label:'Telefon',
+    chat_locked_pre:'Mesaj yazmaq üçün', chat_locked_link:'daxil ol', chat_ph:'Mesajını yaz...', chat_send:'Göndər',
+    chat_empty:'Hələ mesaj yoxdur. İlk mesajı sən yaz!', chat_anon:'Anonim',
+    nav_admin:'Admin panel', admin_title:'Admin panel', admin_sub:'İstifadəçiləri və elanların PDF fayllarını idarə et.',
+    admin_users_h:'İstifadəçilər', admin_listings_h:'Elanlar',
+    admin_make_vip:'VIP et', admin_remove_vip:'VIP-i sil',
+    admin_pdf_current:'PDF yüklənib', admin_pdf_upload:'PDF yüklə', admin_pdf_replace:'PDF-i dəyiş', admin_pdf_remove:'PDF-i sil',
+    admin_pdf_too_big:'Fayl çox böyükdür (maks. 8MB).',
+    pdf_download:'PDF-i endir', pdf_locked:'PDF: yalnız VIP üzvlər üçün',
+    pdf_need_login:'PDF-i görmək üçün daxil ol.', pdf_need_vip:'Bu PDF yalnız VIP üzvlər üçündür.',
+    admin_vip_input_ph:'İstifadəçi adı və ya ad-soyad...', admin_vip_grant_btn:'VIP ver',
+    admin_vip_need_name:'İstifadəçi adını daxil et.', admin_vip_not_found:'Bu adla istifadəçi tapılmadı.', admin_vip_is_admin:'Admin artıq bütün imkanlara malikdir.'
+  },
+  tr: {
+    nav_home:'Ana sayfa', nav_elanlar:'İlanlar', nav_about:'Hakkında', nav_chat:'Sohbet', nav_contact:'İletişim', browse_btn:'İlanlara bak',
+    nav_login:'Giriş / Kayıt', nav_logout:'Çıkış',
+    hero_title:'Eski kitaplarına yeni bir sahip bul',
+    hero_sub:'Okuduğun kitapları paylaş, aradığını bul. İkinci el kitapların değişimi ve satışı için herkese açık ilan panosu.',
+    search_ph:'Kitap adı, yazar veya ders ara...',
+    post_btn:'+ İlan ver',
+    cat_all:'Hepsi', cat_textbook:'Ders kitabı', cat_fiction:'Edebiyat', cat_science:'Bilimsel', cat_language:'Dil öğrenimi', cat_other:'Diğer',
+    listings_title:'İlanlar', listings_count:' ilan',
+    empty:'Henüz ilan yok. İlk ilanı sen ver!',
+    author_unknown:'Yazar belirtilmemiş', free:'Ücretsiz', contact_btn:'Satıcıyla iletişime geç',
+    contact_need_login:'Satıcının iletişim bilgisini görmek için giriş yap.',
+    contact_seller:'Satıcı', contact_phone:'Telefon', contact_none:'Belirtilmemiş',
+    footer:'Bookal — okurdan okura, basit ve ücretsiz.',
+    tab_login:'Giriş', tab_reg:'Kayıt',
+    login_user:'Kullanıcı adı', login_pass:'Şifre', login_btn:'Giriş yap',
+    reg_name:'Ad Soyad', reg_faculty:'Üniversite / Şehir', reg_faculty_ph:'Örn: Bakü',
+    reg_phone:'Telefon', reg_phone_ph:'050 123 45 67', reg_user:'Kullanıcı adı', reg_pass:'Şifre', reg_btn:'Kayıt ol',
+    err_fill_all:'Tüm zorunlu alanları doldur.', err_conn:'Bağlantı hazır değil, biraz sonra tekrar dene.',
+    err_exists:'Bu kullanıcı adı zaten mevcut.', err_generic:'Bir hata oluştu. Tekrar dene.',
+    err_need_user_pass:'Kullanıcı adı ve şifreni gir.', err_wrong:'Kullanıcı adı veya şifre yanlış.',
+    ad_modal_title:'Yeni ilan', ad_modal_sub:'Kitabının bilgilerini gir.',
+    ad_title:'Kitabın adı', ad_author:'Yazar', ad_category:'Kategori', ad_condition:'Durumu',
+    ad_price:'Fiyat (AZN, 0 = ücretsiz)', ad_desc:'Not', ad_desc_ph:'Ek bilgi...', ad_submit:'İlanı yayınla',
+    ad_err_title:'Kitabın adını gir.', ad_err_conn:'Bağlantı hazır değil.', ad_err_fail:'İlan yayınlanamadı. Tekrar dene.',
+    cond_like_new:'Yeni gibi', cond_good:'İyi', cond_fair:'Orta',
+    about_title:'Bookal hakkında',
+    about_p1:'Bu platform herkes için oluşturuldu. Amaç basit: kitaba artık ihtiyacı olmayanlarla, tam da o kitabı arayanları bir araya getirmek.',
+    about_p2:'Site, tap.az veya lalafo.az gibi ilan panosu mantığıyla çalışır — sadece burada yalnızca kitaplar var ve herkes kullanabilir.',
+    about_h1:'Nasıl çalışır',
+    about_s1:'1. Kayıt ol veya hesabına giriş yap.',
+    about_s2:'2. İhtiyacın olmayan kitabını fiyat ve durumuyla birlikte ilan et.',
+    about_s3:'3. Arayanlar kategoriye ve aramaya göre kitabı bulur.',
+    about_s4:'4. "Satıcıyla iletişime geç" butonundan iletişim numarasını görüp doğrudan anlaşırsınız.',
+    about_h2:'Neden gerekli',
+    about_p3:'Her dönem onlarca ders kitabı çöpe atılıyor ya da raflarda tozlanıyor, oysa biri tam da o kitabı para verip yenisini almak üzere. Bu site o kaybı azaltmak için var.',
+    about_h3:'Kim oluşturdu', about_creator:'Bu platform Səməd Hacızadə tarafından, herkese fayda sağlamak amacıyla oluşturuldu ve geliştirilmektedir.',
+    contact_title:'İletişim', contact_sub:'Sorunuz, öneriniz ya da iş birliği fikriniz varsa doğrudan yazabilirsiniz.',
+    contact_creator_role:'Platformun kurucusu', contact_phone_label:'Telefon',
+    chat_locked_pre:'Mesaj yazmak için', chat_locked_link:'giriş yap', chat_ph:'Mesajını yaz...', chat_send:'Gönder',
+    chat_empty:'Henüz mesaj yok. İlk mesajı sen yaz!', chat_anon:'Anonim',
+    nav_admin:'Admin paneli', admin_title:'Admin paneli', admin_sub:'Kullanıcıları ve ilanların PDF dosyalarını yönet.',
+    admin_users_h:'Kullanıcılar', admin_listings_h:'İlanlar',
+    admin_make_vip:'VIP yap', admin_remove_vip:'VIP\'i kaldır',
+    admin_pdf_current:'PDF yüklendi', admin_pdf_upload:'PDF yükle', admin_pdf_replace:'PDF\'i değiştir', admin_pdf_remove:'PDF\'i sil',
+    admin_pdf_too_big:'Dosya çok büyük (maks. 8MB).',
+    pdf_download:'PDF\'i indir', pdf_locked:'PDF: yalnızca VIP üyeler için',
+    pdf_need_login:'PDF\'i görmek için giriş yap.', pdf_need_vip:'Bu PDF yalnızca VIP üyeler içindir.',
+    admin_vip_input_ph:'Kullanıcı adı veya ad-soyad...', admin_vip_grant_btn:'VIP ver',
+    admin_vip_need_name:'Kullanıcı adını gir.', admin_vip_not_found:'Bu adla kullanıcı bulunamadı.', admin_vip_is_admin:'Admin zaten tüm imkanlara sahip.'
+  },
+  en: {
+    nav_home:'Home', nav_elanlar:'Listings', nav_about:'About', nav_chat:'Chat', nav_contact:'Contact', browse_btn:'Browse listings',
+    nav_login:'Log in / Sign up', nav_logout:'Log out',
+    hero_title:'Give your old books a new home',
+    hero_sub:'Share the books you have finished, find the ones you need. An open listings board for swapping and selling used books.',
+    search_ph:'Search by title, author or subject...',
+    post_btn:'+ Post a listing',
+    cat_all:'All', cat_textbook:'Textbook', cat_fiction:'Fiction', cat_science:'Science', cat_language:'Language learning', cat_other:'Other',
+    listings_title:'Listings', listings_count:' listings',
+    empty:'No listings yet. Be the first to post one!',
+    author_unknown:'Author not specified', free:'Free', contact_btn:'Contact seller',
+    contact_need_login:'Log in to see the seller\'s contact details.',
+    contact_seller:'Seller', contact_phone:'Phone', contact_none:'Not provided',
+    footer:'Bookal — reader to reader, simple and free.',
+    tab_login:'Log in', tab_reg:'Sign up',
+    login_user:'Username', login_pass:'Password', login_btn:'Log in',
+    reg_name:'Full name', reg_faculty:'University / City', reg_faculty_ph:'e.g. Baku',
+    reg_phone:'Phone', reg_phone_ph:'050 123 45 67', reg_user:'Username', reg_pass:'Password', reg_btn:'Sign up',
+    err_fill_all:'Fill in all required fields.', err_conn:'Connection not ready, try again shortly.',
+    err_exists:'This username is already taken.', err_generic:'Something went wrong. Please try again.',
+    err_need_user_pass:'Enter your username and password.', err_wrong:'Wrong username or password.',
+    ad_modal_title:'New listing', ad_modal_sub:'Enter your book\'s details.',
+    ad_title:'Book title', ad_author:'Author', ad_category:'Category', ad_condition:'Condition',
+    ad_price:'Price (AZN, 0 = free)', ad_desc:'Notes', ad_desc_ph:'Additional details...', ad_submit:'Post listing',
+    ad_err_title:'Enter the book title.', ad_err_conn:'Connection not ready.', ad_err_fail:'Could not post the listing. Try again.',
+    cond_like_new:'Like new', cond_good:'Good', cond_fair:'Fair',
+    about_title:'About Bookal',
+    about_p1:'This platform is built for everyone. The goal is simple: connect people who no longer need a book with people looking for that exact book right now.',
+    about_p2:'The site works like a listings board — think tap.az or lalafo.az — except it only carries books and anyone can use it.',
+    about_h1:'How it works',
+    about_s1:'1. Sign up or log in to your account.',
+    about_s2:'2. Post the book you no longer need, with its price and condition.',
+    about_s3:'3. People looking for it find it by category or search.',
+    about_s4:'4. Use "Contact seller" to get the phone number and arrange it directly.',
+    about_h2:'Why it matters',
+    about_p3:'Every semester, dozens of textbooks get thrown away or gather dust on a shelf, while someone else is about to pay full price for the exact same book. This site exists to close that gap.',
+    about_h3:'Who built it', about_creator:'This platform was created and is maintained by Səməd Hacızadə, built to benefit everyone.',
+    contact_title:'Contact', contact_sub:'Questions, suggestions, or collaboration ideas — feel free to reach out directly.',
+    contact_creator_role:'Creator of the platform', contact_phone_label:'Phone',
+    chat_locked_pre:'Log in to', chat_locked_link:'send a message', chat_ph:'Type a message...', chat_send:'Send',
+    chat_empty:'No messages yet. Be the first to write one!', chat_anon:'Anonymous',
+    nav_admin:'Admin panel', admin_title:'Admin panel', admin_sub:'Manage users and PDF files attached to listings.',
+    admin_users_h:'Users', admin_listings_h:'Listings',
+    admin_make_vip:'Make VIP', admin_remove_vip:'Remove VIP',
+    admin_pdf_current:'PDF uploaded', admin_pdf_upload:'Upload PDF', admin_pdf_replace:'Replace PDF', admin_pdf_remove:'Remove PDF',
+    admin_pdf_too_big:'File is too large (max 8MB).',
+    pdf_download:'Download PDF', pdf_locked:'PDF: VIP members only',
+    pdf_need_login:'Log in to see the PDF.', pdf_need_vip:'This PDF is only available to VIP members.',
+    admin_vip_input_ph:'Username or full name...', admin_vip_grant_btn:'Grant VIP',
+    admin_vip_need_name:'Enter a username.', admin_vip_not_found:'No user found with that name.', admin_vip_is_admin:'Admin already has full access.'
+  }
+};
+const CAT_CODES = ['all','textbook','fiction','science','language','other'];
+const COND_CODES = ['like_new','good','fair'];
+let currentLang = localStorage.getItem('aztu_lang') || 'az';
+function t(key){ return (I18N[currentLang] && I18N[currentLang][key]) || I18N.az[key] || key; }
+
+let db=null, currentUser=JSON.parse(localStorage.getItem('aztu_session')||'null');
+let allListings=[]; let activeCat='all'; let allUsers=[];
+
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
+
+function renderChips(){
+  document.getElementById('chipRow').innerHTML = CAT_CODES.map(c=>
+    `<span class="chip ${c===activeCat?'active':''}" onclick="setCat('${c}')">${t('cat_'+c)}</span>`).join('');
+}
+function setCat(c){ activeCat=c; renderChips(); renderGrid(); }
+
+function renderNav(){
+  const nav=document.getElementById('navArea');
+  document.getElementById('pnAdmin').style.display = (currentUser&&currentUser.isAdmin) ? 'inline-block' : 'none';
+  document.getElementById('pnElanlar').style.display = currentUser ? 'inline-block' : 'none';
+  if(!currentUser && document.getElementById('viewElanlar').classList.contains('active')){ switchView('home'); }
+  if(currentUser){
+    const vip = currentUser.isVip ? `<span class="vip-badge">VIP</span>` : '';
+    const adm = currentUser.isAdmin ? `<span class="admin-badge">ADMIN</span>` : '';
+    nav.innerHTML = `<span class="pill-user">👤 ${escapeHtml(currentUser.name||currentUser.username)}${vip}${adm}</span>
+      <button class="btn btn-ghost" onclick="logout()">${t('nav_logout')}</button>`;
+  } else {
+    nav.innerHTML = `<button class="btn btn-ghost" onclick="openModal('authOverlay')">${t('nav_login')}</button>`;
+  }
+}
+
+function fillAdSelects(){
+  const catSel=document.getElementById('adCat'), condSel=document.getElementById('adCond');
+  const prevCat=catSel.value, prevCond=condSel.value;
+  catSel.innerHTML = CAT_CODES.filter(c=>c!=='all').map(c=>`<option value="${c}">${t('cat_'+c)}</option>`).join('');
+  condSel.innerHTML = COND_CODES.map(c=>`<option value="${c}">${t('cond_'+c)}</option>`).join('');
+  if(prevCat) catSel.value=prevCat;
+  if(prevCond) condSel.value=prevCond;
+}
+
+function applyStaticText(){
+  document.getElementById('pnHome').textContent = t('nav_home');
+  document.getElementById('pnElanlar').textContent = t('nav_elanlar');
+  document.getElementById('pnAbout').textContent = t('nav_about');
+  document.getElementById('pnContact').textContent = t('nav_contact');
+  document.getElementById('chatPanelTitle').textContent = t('nav_chat');
+  document.getElementById('pnAdmin').textContent = t('nav_admin');
+  document.getElementById('browseBtn').textContent = t('browse_btn');
+  document.getElementById('postAdBtnHero').textContent = t('post_btn');
+  document.getElementById('aboutH3').textContent = t('about_h3');
+  document.getElementById('aboutCreator').textContent = t('about_creator');
+  document.getElementById('contactTitle').textContent = t('contact_title');
+  document.getElementById('contactSub').textContent = t('contact_sub');
+  document.getElementById('contactCreatorRole').textContent = t('contact_creator_role');
+  document.getElementById('contactPhoneLabel').textContent = t('contact_phone_label');
+  document.getElementById('adminTitle').textContent = t('admin_title');
+  document.getElementById('adminSub').textContent = t('admin_sub');
+  document.getElementById('adminUsersH').textContent = t('admin_users_h');
+  document.getElementById('adminListingsH').textContent = t('admin_listings_h');
+  document.getElementById('vipUserInput').placeholder = t('admin_vip_input_ph');
+  document.getElementById('btnVipGrant').textContent = t('admin_vip_grant_btn');
+  document.getElementById('heroTitle').textContent = t('hero_title');
+  document.getElementById('heroSub').textContent = t('hero_sub');
+  document.getElementById('searchInput').placeholder = t('search_ph');
+  document.getElementById('listingsTitle').textContent = t('listings_title');
+  document.getElementById('footerText').textContent = t('footer');
+  document.getElementById('tabLogin').textContent = t('tab_login');
+  document.getElementById('tabReg').textContent = t('tab_reg');
+  document.getElementById('lblLoginUser').textContent = t('login_user');
+  document.getElementById('lblLoginPass').textContent = t('login_pass');
+  document.getElementById('btnLogin').textContent = t('login_btn');
+  document.getElementById('lblRegName').textContent = t('reg_name');
+  document.getElementById('lblRegFaculty').textContent = t('reg_faculty');
+  document.getElementById('regFaculty').placeholder = t('reg_faculty_ph');
+  document.getElementById('lblRegPhone').textContent = t('reg_phone');
+  document.getElementById('regPhone').placeholder = t('reg_phone_ph');
+  document.getElementById('lblRegUser').textContent = t('reg_user');
+  document.getElementById('lblRegPass').textContent = t('reg_pass');
+  document.getElementById('btnReg').textContent = t('reg_btn');
+  document.getElementById('adModalTitle').textContent = t('ad_modal_title');
+  document.getElementById('adModalSub').textContent = t('ad_modal_sub');
+  document.getElementById('lblAdTitle').textContent = t('ad_title');
+  document.getElementById('lblAdAuthor').textContent = t('ad_author');
+  document.getElementById('lblAdCat').textContent = t('ad_category');
+  document.getElementById('lblAdCond').textContent = t('ad_condition');
+  document.getElementById('lblAdPrice').textContent = t('ad_price');
+  document.getElementById('lblAdDesc').textContent = t('ad_desc');
+  document.getElementById('adDesc').placeholder = t('ad_desc_ph');
+  document.getElementById('btnAdSubmit').textContent = t('ad_submit');
+  document.getElementById('aboutTitle').textContent = t('about_title');
+  document.getElementById('aboutP1').textContent = t('about_p1');
+  document.getElementById('aboutP2').textContent = t('about_p2');
+  document.getElementById('aboutH1').textContent = t('about_h1');
+  document.getElementById('aboutStep1').textContent = t('about_s1');
+  document.getElementById('aboutStep2').textContent = t('about_s2');
+  document.getElementById('aboutStep3').textContent = t('about_s3');
+  document.getElementById('aboutStep4').textContent = t('about_s4');
+  document.getElementById('aboutH2').textContent = t('about_h2');
+  document.getElementById('aboutP3').textContent = t('about_p3');
+  document.getElementById('chatLockText').textContent = t('chat_locked_pre');
+  document.getElementById('chatLockLink').textContent = t('chat_locked_link');
+  document.getElementById('chatMsgInput').placeholder = t('chat_ph');
+  document.getElementById('chatSendBtn').textContent = t('chat_send');
+  ['langAz','langTr','langEn'].forEach(id=>document.getElementById(id).classList.remove('active'));
+  document.getElementById('lang'+currentLang.charAt(0).toUpperCase()+currentLang.slice(1)).classList.add('active');
+  document.getElementById('htmlRoot').setAttribute('lang', currentLang);
+  const strip=k=>t(k).replace(/^\d+\.\s*/,'');
+  document.getElementById('homeHowH').textContent=t('about_h1');
+  ['1','2','3','4'].forEach(n=>document.getElementById('homeStep'+n).textContent=strip('about_s'+n));
+  document.getElementById('homeWhyH').textContent=t('about_h2');
+  document.getElementById('homeWhyP').textContent=t('about_p3');
+  fillAdSelects();
+}
+function setLang(l){
+  currentLang=l; localStorage.setItem('aztu_lang', l);
+  applyStaticText(); renderNav(); renderChips(); renderGrid(); renderChatInput();
+  renderChatLog(window._lastMsgs||[]);
+}
+
+function scrollToGrid(){ switchView('elanlar'); }
+function switchView(v){
+  if(v==='elanlar' && !currentUser){ openModal('authOverlay'); switchTab('login'); return; }
+  ['home','elanlar','about','contact','admin'].forEach(name=>{
+    document.getElementById('view'+name.charAt(0).toUpperCase()+name.slice(1)).classList.toggle('active', name===v);
+    document.getElementById('pn'+name.charAt(0).toUpperCase()+name.slice(1)).classList.toggle('active', name===v);
+  });
+  if(v==='admin'){ renderAdminUsers(); renderAdminListings(); }
+}
+function toggleChatWidget(force){
+  const panel=document.getElementById('chatPanel');
+  const open = typeof force==='boolean' ? force : !panel.classList.contains('open');
+  panel.classList.toggle('open', open);
+  if(open){ renderChatInput(); setTimeout(()=>{ const l=document.getElementById('chatLog'); l.scrollTop=l.scrollHeight; },50); }
+}
+function renderChatInput(){
+  const area=document.getElementById('chatInputArea');
+  const notice=document.getElementById('chatLockNotice');
+  if(currentUser){ area.style.display='flex'; notice.style.display='none'; }
+  else { area.style.display='none'; notice.style.display='block'; }
+}
+function openModal(id){ document.getElementById(id).classList.add('show'); }
+function closeModal(id){ document.getElementById(id).classList.remove('show'); document.getElementById('loginErr').textContent=''; document.getElementById('regErr').textContent=''; }
+function switchTab(tab){
+  document.getElementById('tabLogin').classList.toggle('active', tab==='login');
+  document.getElementById('tabReg').classList.toggle('active', tab==='register');
+  document.getElementById('loginForm').style.display = tab==='login' ? 'block':'none';
+  document.getElementById('regForm').style.display = tab==='register' ? 'block':'none';
+}
+function postAdClick(){
+  if(!currentUser){ openModal('authOverlay'); switchTab('login'); }
+  else { openModal('adOverlay'); }
+}
+
+async function doRegister(){
+  const name=document.getElementById('regName').value.trim();
+  const faculty=document.getElementById('regFaculty').value.trim();
+  const phone=document.getElementById('regPhone').value.trim();
+  const username=document.getElementById('regUser').value.trim().toLowerCase();
+  const pass=document.getElementById('regPass').value;
+  const errEl=document.getElementById('regErr');
+  if(!name||!username||!pass){ errEl.textContent=t('err_fill_all'); return; }
+  if(!db){ errEl.textContent=t('err_conn'); return; }
+  try{
+    const existing = await db.doc('users/'+username).get();
+    if(existing && existing.exists){ errEl.textContent=t('err_exists'); return; }
+    const adminMeta = await db.doc('meta/admin').get();
+    const isFirst = !(adminMeta && adminMeta.exists);
+    await db.doc('users/'+username).set({username,name,faculty,phone,password:pass,createdAt:Date.now(),isAdmin:isFirst,isVip:false});
+    if(isFirst){ await db.doc('meta/admin').set({username,assignedAt:Date.now()}); }
+    currentUser={username,name,faculty,phone,isAdmin:isFirst,isVip:false};
+    localStorage.setItem('aztu_session', JSON.stringify(currentUser));
+    renderNav(); renderChatInput(); renderGrid(); closeModal('authOverlay');
+  }catch(e){ errEl.textContent=t('err_generic'); }
+}
+async function doLogin(){
+  const username=document.getElementById('loginUser').value.trim().toLowerCase();
+  const pass=document.getElementById('loginPass').value;
+  const errEl=document.getElementById('loginErr');
+  if(!username||!pass){ errEl.textContent=t('err_need_user_pass'); return; }
+  if(!db){ errEl.textContent=t('err_conn'); return; }
+  try{
+    const doc = await db.doc('users/'+username).get();
+    if(!doc || !doc.exists || doc.data.password!==pass){ errEl.textContent=t('err_wrong'); return; }
+    currentUser={username, name:doc.data.name, faculty:doc.data.faculty, phone:doc.data.phone, isAdmin:!!doc.data.isAdmin, isVip:!!doc.data.isVip};
+    localStorage.setItem('aztu_session', JSON.stringify(currentUser));
+    renderNav(); renderChatInput(); renderGrid(); closeModal('authOverlay');
+  }catch(e){ errEl.textContent=t('err_generic'); }
+}
+function logout(){ currentUser=null; localStorage.removeItem('aztu_session'); renderNav(); renderChatInput(); renderGrid(); }
+
+function renderChatLog(messages){
+  window._lastMsgs = messages;
+  const log=document.getElementById('chatLog');
+  const wasAtBottom = log.scrollTop + log.clientHeight >= log.scrollHeight - 30;
+  log.innerHTML = messages.map(m=>{
+    const liveUser = allUsers.find(u=>u.username===m.username);
+    const isVip = liveUser ? !!liveUser.isVip : !!m.isVip;
+    return `
+    <div class="msg ${currentUser && m.username===currentUser.username ? 'mine':''}">
+      <div class="who">${escapeHtml(m.name||m.username||t('chat_anon'))}${isVip?'<span class="vip-badge">VIP</span>':''}</div>
+      ${escapeHtml(m.text)}
+    </div>`;
+  }).join('') || `<div class="chat-locked">${t('chat_empty')}</div>`;
+  if(wasAtBottom) log.scrollTop = log.scrollHeight;
+}
+async function sendChatMsg(){
+  const input=document.getElementById('chatMsgInput');
+  const text=input.value.trim();
+  if(!text || !currentUser || !db) return;
+  input.value='';
+  try{
+    const id='m_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    await db.doc('messages/'+id).set({ username:currentUser.username, name:currentUser.name, text, createdAt:Date.now(), isVip:!!currentUser.isVip });
+  }catch(e){}
+}
+document.getElementById('chatMsgInput')?.addEventListener('keydown', e=>{ if(e.key==='Enter') sendChatMsg(); });
+
+async function submitAd(){
+  const title=document.getElementById('adTitle').value.trim();
+  const author=document.getElementById('adAuthor').value.trim();
+  const category=document.getElementById('adCat').value;
+  const condition=document.getElementById('adCond').value;
+  const price=Number(document.getElementById('adPrice').value)||0;
+  const desc=document.getElementById('adDesc').value.trim();
+  const errEl=document.getElementById('adErr');
+  if(!title){ errEl.textContent=t('ad_err_title'); return; }
+  if(!db){ errEl.textContent=t('ad_err_conn'); return; }
+  try{
+    const id='l_'+Date.now()+'_'+Math.random().toString(36).slice(2,7);
+    await db.doc('listings/'+id).set({
+      title,author,category,condition,price,desc,
+      sellerName:currentUser.name, sellerFaculty:currentUser.faculty||'', sellerPhone:currentUser.phone||'',
+      createdAt:Date.now()
+    });
+    closeModal('adOverlay');
+    ['adTitle','adAuthor','adDesc'].forEach(id=>document.getElementById(id).value='');
+    document.getElementById('adPrice').value=0;
+  }catch(e){ errEl.textContent=t('ad_err_fail'); }
+}
+
+function renderGrid(){
+  const q=(document.getElementById('searchInput').value||'').toLowerCase();
+  let items=allListings.filter(l=>{
+    const matchCat = activeCat==='all' || l.category===activeCat;
+    const matchQ = !q || (l.title+' '+(l.author||'')).toLowerCase().includes(q);
+    return matchCat && matchQ;
+  }).sort((a,b)=>(b.createdAt||0)-(a.createdAt||0));
+  document.getElementById('countLabel').textContent = items.length+t('listings_count');
+  const grid=document.getElementById('grid');
+  document.getElementById('emptyMsg').style.display = items.length? 'none':'block';
+  document.getElementById('emptyMsg').textContent = t('empty');
+  grid.innerHTML = items.map(l=>{
+    const catLabel = CAT_CODES.includes(l.category) ? t('cat_'+l.category) : (l.category||'');
+    const condLabel = COND_CODES.includes(l.condition) ? t('cond_'+l.condition) : (l.condition||'');
+    return `
+    <div class="card" data-cat="${escapeHtml(l.category||'other')}">
+      <div class="cover" aria-hidden="true"><span>${escapeHtml(l.title)}</span></div>
+      <h3 class="sr">${escapeHtml(l.title)}</h3>
+      <div class="meta">${escapeHtml(l.author||t('author_unknown'))}</div>
+      <div class="meta">${escapeHtml(l.sellerFaculty||'')}${l.sellerFaculty?' • ':''}${escapeHtml(condLabel)}</div>
+      <div class="row-between">
+        <span class="price">${l.price>0 ? l.price+' AZN' : t('free')}</span>
+        <span class="badge">${escapeHtml(catLabel)}</span>
+      </div>
+      
+      <!-- İstək siyahısı və Kitab İstəmək düymələri -->
+      <div style="display:flex; gap:8px; margin-top:10px;">
+          <button class="btn btn-primary contact-btn" style="flex:1; margin-top:0;" onclick="requestBook('${l.id}')">Kitabı İstə</button>
+          <button class="btn btn-ghost wishlist-btn" data-id="${l.id}" onclick="toggleWishlist('${l.id}')" style="padding: 10px; margin-top:0;">❤️</button>
+      </div>
+      <button class="btn btn-ghost contact-btn" onclick="showContact('${l.id}')">${t('contact_btn')}</button>
+      
+      ${pdfBtnHtml(l)}
+    </div>`;
+  }).join('');
+}
+function pdfBtnHtml(l){
+  if(!l.pdfData) return '';
+  if(currentUser && (currentUser.isVip || currentUser.isAdmin)){
+    return `<a class="btn btn-mustard pdf-link" href="${l.pdfData}" download="${escapeHtml(l.pdfName||'kitab.pdf')}">${t('pdf_download')}</a>`;
+  }
+  return `<div class="pdf-locked" onclick="pdfLockedClick()">${t('pdf_locked')}</div>`;
+}
+function pdfLockedClick(){
+  if(!currentUser){ alert(t('pdf_need_login')); openModal('authOverlay'); }
+  else alert(t('pdf_need_vip'));
+}
+function showContact(id){
+  const l=allListings.find(x=>x.id===id);
+  if(!l) return;
+  if(!currentUser){ alert(t('contact_need_login')); openModal('authOverlay'); return; }
+  alert(t('contact_seller')+': '+(l.sellerName||'—')+'\n'+t('contact_phone')+': '+(l.sellerPhone||t('contact_none')));
+}
+
+function renderAdminUsers(){
+  if(!currentUser || !currentUser.isAdmin) return;
+  const wrap=document.getElementById('adminUsersList');
+  wrap.innerHTML = allUsers.slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(u=>`
+    <div class="admin-row">
+      <div>
+        <div class="who">${escapeHtml(u.name||u.username)} ${u.isAdmin?'<span class="admin-badge">ADMIN</span>':''}${u.isVip?'<span class="vip-badge">VIP</span>':''}</div>
+        <div class="sub2">@${escapeHtml(u.username)}${u.faculty?' • '+escapeHtml(u.faculty):''}</div>
+      </div>
+      <div class="acts">
+        ${u.isAdmin ? '' : `<button class="btn btn-ghost btn-sm" onclick="toggleVip('${u.username}')">${u.isVip? t('admin_remove_vip') : t('admin_make_vip')}</button>`}
+      </div>
+    </div>`).join('') || `<div class="empty">—</div>`;
+}
+async function grantVipByUsername(){
+  const q=(document.getElementById('vipUserInput').value||'').trim().toLowerCase();
+  const errEl=document.getElementById('vipGrantErr');
+  errEl.textContent='';
+  if(!q){ errEl.textContent=t('admin_vip_need_name'); return; }
+  const u = allUsers.find(x=>x.username.toLowerCase()===q) || allUsers.find(x=>(x.name||'').toLowerCase().includes(q));
+  if(!u){ errEl.textContent=t('admin_vip_not_found'); return; }
+  if(u.isAdmin){ errEl.textContent=t('admin_vip_is_admin'); return; }
+  await db.doc('users/'+u.username).set({...u, isVip:true});
+  document.getElementById('vipUserInput').value='';
+}
+async function toggleVip(username){
+  const u = allUsers.find(x=>x.username===username);
+  if(!u || !db) return;
+  await db.doc('users/'+username).set({...u, isVip:!u.isVip});
+}
+function renderAdminListings(){
+  if(!currentUser || !currentUser.isAdmin) return;
+  const wrap=document.getElementById('adminListingsList');
+  wrap.innerHTML = allListings.slice().sort((a,b)=>(b.createdAt||0)-(a.createdAt||0)).map(l=>`
+    <div class="admin-row">
+      <div>
+        <div class="who">${escapeHtml(l.title)}</div>
+        <div class="sub2">${escapeHtml(l.sellerName||'')}${l.pdfData? ' • '+t('admin_pdf_current')+': '+escapeHtml(l.pdfName||''):''}</div>
+      </div>
+      <div class="acts">
+        <input type="file" accept="application/pdf" id="pdfInput_${l.id}">
+        <button class="btn btn-primary btn-sm" onclick="handlePdfUpload('${l.id}')">${l.pdfData? t('admin_pdf_replace') : t('admin_pdf_upload')}</button>
+        ${l.pdfData? `<button class="btn btn-ghost btn-sm" onclick="removePdf('${l.id}')">${t('admin_pdf_remove')}</button>`:''}
+      </div>
+    </div>`).join('') || `<div class="empty">—</div>`;
+}
+async function handlePdfUpload(id){
+  const input=document.getElementById('pdfInput_'+id);
+  const file=input.files[0];
+  if(!file || !db) return;
+  if(file.size > 8*1024*1024){ alert(t('admin_pdf_too_big')); return; }
+  const l = allListings.find(x=>x.id===id);
+  if(!l) return;
+  const reader = new FileReader();
+  reader.onload = async ()=>{
+    await db.doc('listings/'+id).set({...l, pdfData:reader.result, pdfName:file.name});
+  };
+  reader.readAsDataURL(file);
+}
+async function removePdf(id){
+  const l = allListings.find(x=>x.id===id);
+  if(!l || !db) return;
+  const copy={...l}; delete copy.pdfData; delete copy.pdfName;
+  await db.doc('listings/'+id).set(copy);
+}
+
+document.getElementById('searchInput').addEventListener('input', renderGrid);
+
+/* =====================================================================
+   API BAĞLANTILARI (Vanilla JS -> Next.js Server Actions)
+   ===================================================================== */
+async function apiCall(endpoint, method = 'POST', data = null) {
+  const options = {
+    method,
+    headers: { 'Content-Type': 'application/json' }
+  };
+  if (data) options.body = JSON.stringify(data);
+  try {
+    const res = await fetch(`/api/${endpoint}`, options);
+    return await res.json();
+  } catch (error) {
+    console.error(`API Error [${endpoint}]:`, error);
+    return { ok: false, error: 'GENERIC' };
+  }
+}
+
+async function toggleWishlist(listingId) {
+  if (!currentUser) { openModal('authOverlay'); return; }
+  const result = await apiCall('wishlist/toggle', 'POST', { listingId });
+  if (result.ok) {
+    const btn = document.querySelector(`.wishlist-btn[data-id="${listingId}"]`);
+    if (btn) btn.classList.toggle('active', result.wishlisted);
+  } else {
+    alert(t('err_generic') || "Xəta baş verdi.");
+  }
+}
+
+async function loadWishlist() {
+    if (!currentUser) return;
+    const result = await apiCall('wishlist/list', 'GET');
+    if(result.ok) { console.log("İstək siyahısı:", result.items); }
+}
+
+async function requestBook(listingId) {
+    if (!currentUser) { alert(t('contact_need_login')); openModal('authOverlay'); return; }
+    const listing = allListings.find(l => l.id === listingId);
+    if(listing && listing.sellerName === currentUser.name) {
+        alert("Öz kitabınızı sifariş edə bilməzsiniz.");
+        return;
+    }
+    const result = await apiCall('transactions/create', 'POST', { listingId });
+    if (result.ok) {
+        alert("Sorğunuz göndərildi! Satıcı təsdiq etdikdən sonra əlaqə qurulacaq.");
+    } else {
+        const errorMsg = {
+            'UNAUTHENTICATED': t('err_need_user_pass'),
+            'NOT_FOUND': "Kitab tapılmadı.",
+            'OWN_LISTING': "Öz kitabınızı sifariş edə bilməzsiniz.",
+            'LISTING_UNAVAILABLE': "Bu kitab artıq başqası tərəfindən götürülüb.",
+            'ALREADY_REQUESTED': "Siz bu kitabı artıq istəmisiniz."
+        }[result.error] || t('err_generic');
+        alert(errorMsg);
+    }
+}
+
+async function completeTransaction(transactionId) {
+    if(!confirm("Kitabı alıcıya təhvil verdiyinizi təsdiq edirsiniz?")) return;
+    const result = await apiCall('transactions/complete', 'POST', { transactionId });
+    if(result.ok) {
+        alert("Tranzaksiya tamamlandı! İndi alıcıya rəy yaza bilərsiniz.");
+    } else {
+         const errorMsg = {
+            'NOT_PENDING': "Bu tranzaksiya artıq tamamlanıb və ya ləğv edilib.",
+            'FORBIDDEN': "Yalnız satıcı tranzaksiyanı tamamlaya bilər."
+        }[result.error] || t('err_generic');
+        alert(errorMsg);
+    }
+}
+
+async function submitReview(transactionId, rating, comment) {
+    const result = await apiCall('reviews/create', 'POST', { transactionId, rating, comment });
+    if(result.ok) {
+        alert("Rəyiniz uğurla əlavə edildi!");
+    } else {
+        const errorMsg = {
+             'NOT_COMPLETED': "Yalnız tamamlanmış mübadilələrə rəy yazıla bilər.",
+             'ALREADY_REVIEWED': "Siz artıq bu mübadilə üçün rəy yazmısınız."
+        }[result.error] || t('err_generic');
+        alert(errorMsg);
+    }
+}
+
+async function init(){
+  applyStaticText(); renderChips(); renderNav(); renderGrid(); renderChatInput();
+  try{
+    db = await claude.use('db');
+    if(!db){ document.getElementById('emptyMsg').style.display='block'; document.getElementById('emptyMsg').textContent='—'; return; }
+    db.collection('listings').onSnapshot((docs)=>{
+      allListings = docs.map(d=>({id:d.id, ...d.data}));
+      renderGrid();
+      if(document.getElementById('viewAdmin').classList.contains('active')) renderAdminListings();
+    });
+    db.collection('messages').onSnapshot((docs)=>{
+      const msgs = docs.map(d=>({id:d.id, ...d.data})).sort((a,b)=>(a.createdAt||0)-(b.createdAt||0)).slice(-200);
+      renderChatLog(msgs);
+    });
+    db.collection('users').onSnapshot((docs)=>{
+      allUsers = docs.map(d=>({id:d.id, ...d.data}));
+      if(currentUser){
+        const me = allUsers.find(u=>u.username===currentUser.username);
+        if(me){
+          currentUser = {...currentUser, isAdmin:!!me.isAdmin, isVip:!!me.isVip, name:me.name, faculty:me.faculty, phone:me.phone};
+          localStorage.setItem('aztu_session', JSON.stringify(currentUser));
+          renderNav();
+        }
+      }
+      renderGrid();
+      if(document.getElementById('viewAdmin').classList.contains('active')){ renderAdminUsers(); renderAdminListings(); }
+    });
+  }catch(e){}
+}
+document.querySelectorAll('.pagenav span,.chat-fab').forEach(el=>{
+  el.tabIndex=0; el.setAttribute('role','button');
+  el.addEventListener('keydown',e=>{ if(e.key==='Enter'||e.key===' '){ e.preventDefault(); el.click(); } });
+});
+init();
+/* ===== POLISH JS ===== */
+(function(){
+  const bar=document.createElement('div'); bar.className='progress'; document.body.appendChild(bar);
+  const hd=document.querySelector('header');
+  function onScroll(){ const h=document.documentElement; const m=h.scrollHeight-h.clientHeight; bar.style.setProperty('--p', m>0? h.scrollTop/m : 0); hd.classList.toggle('scrolled', h.scrollTop>8); }
+  addEventListener('scroll',onScroll,{passive:true}); onScroll();
+  const hero=document.querySelector('.hero');
+  if(hero){ const sp=document.createElement('div'); sp.className='spot'; hero.prepend(sp);
+    hero.addEventListener('pointermove',e=>{ const r=hero.getBoundingClientRect(); sp.style.setProperty('--mx',(e.clientX-r.left)+'px'); sp.style.setProperty('--my',(e.clientY-r.top)+'px'); }); }
+  const io='IntersectionObserver' in window ? new IntersectionObserver(es=>es.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target);} }),{threshold:.2}) : null;
+  document.querySelectorAll('.how-list li').forEach(li=>{ io? io.observe(li) : li.classList.add('in'); });
+  const g=document.getElementById('grid');
+  function indexCards(){ g.querySelectorAll('.card').forEach((c,i)=>c.style.setProperty('--k',i)); }
+  new MutationObserver(indexCards).observe(g,{childList:true}); indexCards();
+  const fine=matchMedia('(hover:hover) and (pointer:fine)').matches;
+  if(fine){
+    g.addEventListener('pointermove',e=>{ const c=e.target.closest('.card'); if(!c) return; const r=c.getBoundingClientRect();
+      c.style.setProperty('--ry',(((e.clientX-r.left)/r.width)-.5)*7+'deg'); c.style.setProperty('--rx',(-(((e.clientY-r.top)/r.height)-.5))*7+'deg'); });
+    g.addEventListener('pointerout',e=>{ const c=e.target.closest('.card'); if(c && !c.contains(e.relatedTarget)){ c.style.setProperty('--rx','0deg'); c.style.setProperty('--ry','0deg'); } });
+  }
+  const _sv=window.switchView;
+  window.switchView=function(v){ _sv(v); scrollTo({top:0,behavior:'smooth'}); };
+})();
+
+(function(){
+  const sc=document.getElementById('bookScene'), bk=document.getElementById('bigBook'); if(!sc||!bk) return;
+  const glow=sc.querySelector('.bs-glow');
+  function upd(){
+    const r=sc.getBoundingClientRect(), tot=r.height-innerHeight;
+    let p=tot>0? -r.top/tot : 0; p=Math.max(0,Math.min(1,p*1.25));
+    p=p<.5? 2*p*p : 1-Math.pow(-2*p+2,2)/2;
+    bk.style.setProperty('--p',p.toFixed(4)); glow.style.setProperty('--o',p.toFixed(3)); sc.style.setProperty('--o',p.toFixed(3));
+  }
+  addEventListener('scroll',upd,{passive:true}); addEventListener('resize',upd); upd();
+})();
+
+(function(){
+  const $=id=>document.getElementById(id), clamp=(x,a=0,b=1)=>Math.max(a,Math.min(b,x));
+  const bounce=t=>{const n=7.5625,d=2.75; if(t<1/d)return n*t*t; if(t<2/d)return n*(t-=1.5/d)*t+.75; if(t<2.5/d)return n*(t-=2.25/d)*t+.9375; return n*(t-=2.625/d)*t+.984375;};
+  // build word spans
+  const lp=$('litP'); const hot=['oxucunun','yenidən','həyata'];
+  lp.innerHTML=lp.textContent.split(' ').map(w=>`<span class="w${hot.includes(w.replace(/[.,]/g,''))?' hot':''}">${w}</span>`).join(' ');
+  const words=[...lp.querySelectorAll('.w')];
+  // pile of books
+  const pile=$('pile'), cols=['#26398F','#A63A4E','#17706E','#6B4FA3','#D9A441','#2B3A8C','#B8341F','#4B5573'], names=['Fizika','Riyaziyyat','Kimya','İngilis dili','Proqramlaşdırma','Mexanika','Ədəbiyyat','Kalkulus','Fizika II','Elektrik','Statistika','Tarix','Dövrələr','Alqoritm'];
+  const N=names.length, bks=[]; let y=0;
+  names.forEach((nm,i)=>{const h=26+(i*7)%16, w=190+((i*53)%90); const el=document.createElement('div'); el.className='bk';
+    el.style.cssText=`--bh:${h}px;--bw:${w}px;--bc:${cols[i%cols.length]}`; el.textContent=nm.toUpperCase(); pile.appendChild(el);
+    bks.push({el,y:y+18,rot:((i*37)%11-5)*.9,dx:((i*29)%23)-11,from:(i%2?-1:1)*(160+(i*17)%60)}); y+=h;});
+  const hero=document.querySelector('.hero'), h1=hero.querySelector('h1'), sps=[...hero.querySelectorAll('.sp')].filter(x=>!x.classList.contains('out'));
+  const rain=$('rain'), rainH=$('rainH'); let lastY=scrollY, skew=0, tick=false;
+  function frame(){
+    tick=false; const vh=innerHeight, sy=scrollY;
+    // hero: text recedes, books topple off the shelf
+    const ht=clamp(sy/(hero.offsetHeight*.75));
+    h1.style.transform=`translateY(${ht*90}px) scale(${1-ht*.12})`; h1.style.opacity=1-ht*.9;
+    sps.forEach((sp,i)=>{const d=ht*ht; sp.style.transform=`translate(${(i%2?1:-1)*d*40}px,${d*(160+i*24)}px) rotate(${(i%2?1:-1)*d*(30+i*5)}deg)`;});
+    // marquees driven by scroll, skewed by speed
+    skew+=(clamp((sy-lastY)*.25,-14,14)-skew)*.2; lastY=sy;
+    // words light up
+    const lr=lp.getBoundingClientRect(), lt=clamp((vh*.85-lr.top)/(vh*.6+lr.height*.4));
+    words.forEach((w,i)=>w.classList.toggle('on', lt*1.05 > i/words.length));
+    // falling books with bounce
+    const rr=rain.getBoundingClientRect(), rp=clamp(-rr.top/(rr.height-vh)*1.15);
+    bks.forEach((b,i)=>{const st=i/N*.72, k=clamp((rp-st)/.26); const drop=(1-bounce(k)); const yy=-(vh+120)*drop;
+      b.el.style.transform=`translate(${b.dx+b.from*(1-k)}px,${yy-b.y}px) rotate(${b.rot+(1-k)*(i%2?-160:160)}deg)`; b.el.style.opacity=k>0?1:0;});
+    rainH.style.transform=`scale(${.9+rp*.2})`; rainH.style.opacity=.35+rp*.65;
+    if(Math.abs(skew)>.05) requestAnimationFrame(()=>{ if(!tick){tick=true; frame();} });
+  }
+  const on=()=>{ if(!tick){tick=true; requestAnimationFrame(frame);} };
+  addEventListener('scroll',on,{passive:true}); addEventListener('resize',on); frame();
+})();
+
+(function(){
+  const hero=document.querySelector('.hero'), scene=document.getElementById('bookScene'), big=document.getElementById('bigBook'), home=document.getElementById('viewHome');
+  const spine=[...hero.querySelectorAll('.sp')].find(x=>x.classList.contains('out')); if(!spine||!scene) return;
+  const fl=document.createElement('div'); fl.className='flyer';
+  fl.innerHTML='<i></i><span class="fl-spine"><b>Bookal</b></span><span class="fl-cover"><b>Bookal</b><em>Kitab platforması</em></span>'; document.body.appendChild(fl);
+  const sl=fl.querySelector('.fl-spine'), cv=fl.querySelector('.fl-cover'), ln=fl.querySelector('i');
+  const cl=(x,a=0,b=1)=>Math.max(a,Math.min(b,x)), lerp=(a,b,t)=>a+(b-a)*t, sm=t=>t*t*(3-2*t);
+  const bounce=t=>{const n=7.5625,d=2.75; if(t<1/d)return n*t*t; if(t<2/d)return n*(t-=1.5/d)*t+.75; if(t<2.5/d)return n*(t-=2.25/d)*t+.9375; return n*(t-=2.625/d)*t+.984375;};
+  let sr=null, tick=false;
+  function frame(){
+    tick=false; const sy=scrollY, vw=innerWidth, vh=innerHeight, D=scene.getBoundingClientRect().top+sy;
+    const t=cl(sy/Math.max(D,1)), inHome=home.classList.contains('active');
+    if(!inHome||t>=1){ fl.style.display='none'; spine.style.visibility=inHome?'hidden':''; big.style.visibility=''; return; }
+    big.style.visibility='hidden'; spine.style.visibility='hidden'; fl.style.display='block';
+    const r=spine.getBoundingClientRect(); if(sy<=1||!sr||r.width) sr=r.width? r : sr;
+    const b=sr||{left:vw/2-20,top:vh*.5,width:40,height:170};
+    const x0=(r.width?r.left:b.left)+ (r.width?r.width:b.width)/2, y0=(r.width?r.top:b.top)+(r.width?r.height:b.height)/2;
+    const w0=r.width||b.width, h0=r.height||b.height;
+    const bw=Math.min(300,vw*.64), bh=bw*4/3, e=sm(cl(t*1.15)), g=sm(cl((t-.05)/.95));
+    const cx=lerp(x0,vw/2,g), cy=lerp(y0,vh/2,bounce(t)), w=lerp(w0,bw,e), h=lerp(h0,bh,e);
+    const wob=Math.sin(t*Math.PI*4)*14*(1-t), ry=Math.sin(t*Math.PI)*42*(1-t*.3);
+    fl.style.width=w+'px'; fl.style.height=h+'px';
+    fl.style.transform=`translate3d(${cx-w/2}px,${cy-h/2}px,0) perspective(900px) rotateZ(${wob}deg) rotateY(${-ry}deg)`;
+    sl.style.opacity=1-cl(e*3); cv.style.opacity=cl((e-.55)*2.2); ln.style.opacity=.8*(1-cl(e*2.5));
+  }
+  const on=()=>{ if(!tick){tick=true; requestAnimationFrame(frame);} };
+  addEventListener('scroll',on,{passive:true}); addEventListener('resize',on); new MutationObserver(on).observe(home,{attributes:true}); frame();
+})();
+</script>
+</body>
+</html>

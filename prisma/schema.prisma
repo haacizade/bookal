@@ -1,0 +1,169 @@
+// Bookal — Prisma 6 / PostgreSQL
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ───────────── enums ─────────────
+enum Role              { USER ADMIN }
+enum BookLanguage      { AZ EN RU TR OTHER }
+enum BookCondition     { NEW USED HIGHLIGHTED }
+enum ListingType       { SALE EXCHANGE }                      // price 0 on a SALE = free
+enum ListingStatus     { ACTIVE RESERVED COMPLETED ARCHIVED }
+enum TransactionStatus { PENDING COMPLETED CANCELLED }
+enum TokenType         { VERIFY_EMAIL RESET_PASSWORD }
+
+// ───────────── users & auth ─────────────
+model User {
+  id            String    @id @default(cuid())
+  email         String    @unique                // always stored lowercase
+  emailVerified DateTime?                        // null = cannot log in
+  passwordHash  String                           // bcrypt, never returned to the client
+  name          String
+  username      String    @unique                // public profile slug: /u/[username]
+  university    String?
+  phone         String?                          // only shown to logged-in users
+  bio           String?
+  avatarUrl     String?
+  role          Role      @default(USER)
+  isVip         Boolean   @default(false)
+
+  // denormalised review aggregates (updated in the same DB transaction as a new Review)
+  ratingAvg     Decimal   @default(0) @db.Decimal(3, 2)
+  ratingCount   Int       @default(0)
+
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+
+  listings        Listing[]
+  wishlist        WishlistItem[]
+  purchases       Transaction[] @relation("TxBuyer")
+  sales           Transaction[] @relation("TxSeller")
+  reviewsWritten  Review[]      @relation("ReviewAuthor")
+  reviewsReceived Review[]      @relation("ReviewTarget")
+  tokens          AuthToken[]
+}
+
+// One-time tokens (email verification, password reset). Only the SHA-256 hash is stored.
+model AuthToken {
+  id        String    @id @default(cuid())
+  userId    String
+  type      TokenType
+  tokenHash String    @unique
+  expiresAt DateTime
+  usedAt    DateTime?
+  createdAt DateTime  @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId, type, createdAt])
+}
+
+// ───────────── catalog ─────────────
+// Lookup tables (not enums) so admins can add genres/subjects without a migration.
+// Display names live in the i18n dictionaries, keyed by slug.
+model Genre {
+  id        Int       @id @default(autoincrement())
+  slug      String    @unique
+  sortOrder Int       @default(0)
+  listings  Listing[]
+}
+
+model Subject {
+  id        Int       @id @default(autoincrement())
+  slug      String    @unique
+  faculty   String?
+  sortOrder Int       @default(0)
+  listings  Listing[]
+}
+
+model Listing {
+  id          String        @id @default(cuid())
+  sellerId    String
+  title       String
+  author      String
+  description String?
+  language    BookLanguage
+  condition   BookCondition
+  genreId     Int
+  subjectId   Int?                                   // only meaningful for textbooks
+  type        ListingType   @default(SALE)
+  price       Decimal       @default(0) @db.Decimal(10, 2)
+  coverUrl    String?
+  pdfUrl      String?                                // existing VIP PDF feature
+  status      ListingStatus @default(ACTIVE)
+  createdAt   DateTime      @default(now())
+  updatedAt   DateTime      @updatedAt
+
+  seller       User           @relation(fields: [sellerId], references: [id], onDelete: Cascade)
+  genre        Genre          @relation(fields: [genreId], references: [id])
+  subject      Subject?       @relation(fields: [subjectId], references: [id])
+  wishlistedBy WishlistItem[]
+  transactions Transaction[]
+
+  // every filter on the catalog page is "status = ACTIVE AND <facet>", newest first
+  @@index([status, createdAt(sort: Desc)])
+  @@index([status, language])
+  @@index([status, condition])
+  @@index([status, genreId])
+  @@index([status, subjectId])
+  @@index([status, author])
+  @@index([sellerId, status])
+}
+
+// ───────────── transactions & reviews ─────────────
+model Transaction {
+  id          String            @id @default(cuid())
+  listingId   String
+  sellerId    String
+  buyerId     String
+  type        ListingType
+  price       Decimal           @db.Decimal(10, 2)   // price at the time of the deal
+  status      TransactionStatus @default(PENDING)
+  completedAt DateTime?
+  createdAt   DateTime          @default(now())
+
+  listing Listing  @relation(fields: [listingId], references: [id])
+  seller  User     @relation("TxSeller", fields: [sellerId], references: [id])
+  buyer   User     @relation("TxBuyer", fields: [buyerId], references: [id])
+  reviews Review[]
+
+  @@index([sellerId, createdAt(sort: Desc)])
+  @@index([buyerId, createdAt(sort: Desc)])
+  @@index([listingId])
+}
+
+// Each party of a COMPLETED transaction can review the other party exactly once.
+model Review {
+  id            String   @id @default(cuid())
+  transactionId String
+  authorId      String
+  targetId      String
+  rating        Int                                   // 1..5 (CHECK in prisma/constraints.sql)
+  comment       String?
+  createdAt     DateTime @default(now())
+
+  transaction Transaction @relation(fields: [transactionId], references: [id], onDelete: Cascade)
+  author      User        @relation("ReviewAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  target      User        @relation("ReviewTarget", fields: [targetId], references: [id], onDelete: Cascade)
+
+  @@unique([transactionId, authorId])
+  @@index([targetId, createdAt(sort: Desc)])
+}
+
+// ───────────── wishlist ─────────────
+model WishlistItem {
+  userId    String
+  listingId String
+  createdAt DateTime @default(now())
+
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing Listing @relation(fields: [listingId], references: [id], onDelete: Cascade)
+
+  @@id([userId, listingId])
+  @@index([listingId])
+}
