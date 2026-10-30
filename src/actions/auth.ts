@@ -7,8 +7,6 @@ import { Prisma } from "@prisma/client";
 import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { registerSchema, loginSchema, resendSchema } from "@/lib/validation";
-import { issueToken, canIssueToken, consumeToken } from "@/lib/tokens";
-import { sendVerificationEmail } from "@/lib/mail";
 import { uniqueUsername } from "@/lib/username";
 import type { AuthState, ErrorCode } from "./types";
 
