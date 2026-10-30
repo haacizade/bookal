@@ -9,13 +9,47 @@ datasource db {
 }
 
 // ───────────── enums ─────────────
-enum Role              { USER ADMIN }
-enum BookLanguage      { AZ EN RU TR OTHER }
-enum BookCondition     { NEW USED HIGHLIGHTED }
-enum ListingType       { SALE EXCHANGE }                      // price 0 on a SALE = free
-enum ListingStatus     { ACTIVE RESERVED COMPLETED ARCHIVED }
-enum TransactionStatus { PENDING COMPLETED CANCELLED }
-enum TokenType         { VERIFY_EMAIL RESET_PASSWORD }
+enum Role {
+  USER
+  ADMIN
+}
+
+enum BookLanguage {
+  AZ
+  EN
+  RU
+  TR
+  OTHER
+}
+
+enum BookCondition {
+  NEW
+  USED
+  HIGHLIGHTED
+}
+
+enum ListingType {
+  SALE
+  EXCHANGE
+}
+
+enum ListingStatus {
+  ACTIVE
+  RESERVED
+  COMPLETED
+  ARCHIVED
+}
+
+enum TransactionStatus {
+  PENDING
+  COMPLETED
+  CANCELLED
+}
+
+enum TokenType {
+  VERIFY_EMAIL
+  RESET_PASSWORD
+}
 
 // ───────────── users & auth ─────────────
 model User {
