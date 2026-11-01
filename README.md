@@ -9,12 +9,12 @@ npm run db:seed                 # genres + subjects
 npm run dev
 ```
 
-Without `RESEND_API_KEY` the verification link is printed in the server console.
+Registration signs the user in immediately; there is no email verification.
 Pinned to Prisma 6 and Next.js 15 (`middleware.ts`); Next 16 renames it to `proxy.ts`, Prisma 7 moves `url` into `prisma.config.ts`.
 
 ## Step 2 (part 1): listings
 
-- `src/actions/auth.ts` (step 1) already covers register / verify / resend / login / logout. Use `getActiveUser()` from `src/lib/session.ts` in any new Server Action that must return a result instead of redirecting.
+- `src/actions/auth.ts` (step 1) already covers register / login / logout. Use `getActiveUser()` from `src/lib/session.ts` in any new Server Action that must return a result instead of redirecting.
 - `src/actions/listings.ts`
   - `createListingAction(prev, formData)` for `useActionState`; returns `{ ok: true, id }` or `{ ok: false, code, fields, values }`.
   - `fetchListingsAction(params)` for client-side filtering / "load more".
@@ -41,3 +41,7 @@ All actions return `{ ok: true, … }` or `{ ok: false, code, fields? }` (codes 
 | `fetchWishlistAction({ page?, pageSize? })` | logged-in user | items = `{ addedAt, status, listing: ListingCard }`; archived listings hidden |
 
 Locking: every write that changes a listing locks the listing row first, then touches transactions (no deadlocks, no double-complete).
+
+## JSON endpoints (for `index.html`)
+
+`POST /api/wishlist/toggle`, `GET /api/wishlist/list`, `POST /api/transactions/create`, `POST /api/transactions/complete`, `POST /api/reviews/create` are thin wrappers around the Server Actions above. They answer `{ ok: true, … }` or `{ ok: false, code }` with a matching HTTP status.

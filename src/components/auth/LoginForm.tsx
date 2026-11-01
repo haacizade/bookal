@@ -6,10 +6,9 @@ import { loginAction } from "@/actions/auth";
 import type { AuthState } from "@/actions/types";
 import type { Copy } from "@/lib/copy";
 import { Alert, Field, SubmitButton } from "./ui";
-import { ResendButton } from "./ResendButton";
 
-export function LoginForm({ t, errors, checkEmail, next, verified }: {
-  t: Copy["login"]; errors: Copy["errors"]; checkEmail: Copy["checkEmail"]; next?: string; verified?: boolean;
+export function LoginForm({ t, errors, next }: {
+  t: Copy["login"]; errors: Copy["errors"]; next?: string;
 }) {
   const [state, action, pending] = useActionState<AuthState, FormData>(loginAction, null);
   const failed = state && !state.ok ? state : null;
@@ -21,17 +20,12 @@ export function LoginForm({ t, errors, checkEmail, next, verified }: {
         <p className="mt-2 text-sub">{t.sub}</p>
       </div>
 
-      {verified && !failed && <Alert tone="info">{t.verifiedBanner}</Alert>}
       {failed && <Alert>{errors[failed.code]}</Alert>}
 
       {next && <input type="hidden" name="next" value={next} />}
       <Field id="email" type="email" label={t.email} autoComplete="email" required defaultValue={failed?.values?.email} />
       <Field id="password" type="password" label={t.password} autoComplete="current-password" required />
       <SubmitButton pending={pending}>{t.submit}</SubmitButton>
-
-      {failed?.code === "EMAIL_NOT_VERIFIED" && failed.values?.email && (
-        <ResendButton email={failed.values.email} t={checkEmail} />
-      )}
 
       <p className="text-sm text-sub">
         {t.noAccount}{" "}

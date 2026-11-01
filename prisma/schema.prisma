@@ -46,16 +46,10 @@ enum TransactionStatus {
   CANCELLED
 }
 
-enum TokenType {
-  VERIFY_EMAIL
-  RESET_PASSWORD
-}
-
-// ───────────── users & auth ─────────────
+// ───────────── users ─────────────
 model User {
   id            String    @id @default(cuid())
   email         String    @unique                // always stored lowercase
-  emailVerified DateTime?                        // null = cannot log in
   passwordHash  String                           // bcrypt, never returned to the client
   name          String
   username      String    @unique                // public profile slug: /u/[username]
@@ -79,22 +73,6 @@ model User {
   sales           Transaction[] @relation("TxSeller")
   reviewsWritten  Review[]      @relation("ReviewAuthor")
   reviewsReceived Review[]      @relation("ReviewTarget")
-  tokens          AuthToken[]
-}
-
-// One-time tokens (email verification, password reset). Only the SHA-256 hash is stored.
-model AuthToken {
-  id        String    @id @default(cuid())
-  userId    String
-  type      TokenType
-  tokenHash String    @unique
-  expiresAt DateTime
-  usedAt    DateTime?
-  createdAt DateTime  @default(now())
-
-  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
-
-  @@index([userId, type, createdAt])
 }
 
 // ───────────── catalog ─────────────

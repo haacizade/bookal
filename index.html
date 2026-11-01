@@ -1243,7 +1243,7 @@ async function apiCall(endpoint, method = 'POST', data = null) {
     return await res.json();
   } catch (error) {
     console.error(`API Error [${endpoint}]:`, error);
-    return { ok: false, error: 'GENERIC' };
+    return { ok: false, code: 'GENERIC' };
   }
 }
 
@@ -1281,7 +1281,7 @@ async function requestBook(listingId) {
             'OWN_LISTING': "Öz kitabınızı sifariş edə bilməzsiniz.",
             'LISTING_UNAVAILABLE': "Bu kitab artıq başqası tərəfindən götürülüb.",
             'ALREADY_REQUESTED': "Siz bu kitabı artıq istəmisiniz."
-        }[result.error] || t('err_generic');
+        }[result.code] || t('err_generic');
         alert(errorMsg);
     }
 }
@@ -1295,7 +1295,7 @@ async function completeTransaction(transactionId) {
          const errorMsg = {
             'NOT_PENDING': "Bu tranzaksiya artıq tamamlanıb və ya ləğv edilib.",
             'FORBIDDEN': "Yalnız satıcı tranzaksiyanı tamamlaya bilər."
-        }[result.error] || t('err_generic');
+        }[result.code] || t('err_generic');
         alert(errorMsg);
     }
 }
@@ -1308,7 +1308,7 @@ async function submitReview(transactionId, rating, comment) {
         const errorMsg = {
              'NOT_COMPLETED': "Yalnız tamamlanmış mübadilələrə rəy yazıla bilər.",
              'ALREADY_REVIEWED': "Siz artıq bu mübadilə üçün rəy yazmısınız."
-        }[result.error] || t('err_generic');
+        }[result.code] || t('err_generic');
         alert(errorMsg);
     }
 }

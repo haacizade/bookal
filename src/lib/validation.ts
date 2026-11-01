@@ -13,9 +13,25 @@ export const registerSchema = z.object({
   phone: z.string().trim().regex(/^\+?[\d\s-]{7,18}$/).optional().or(z.literal("")),
 });
 
-export const loginSchema = z.object({ email, password: z.string().min(1).max(72) });
+// ───────────── profile ─────────────
+const phone = z.string().trim().regex(/^\+?[\d\s-]{7,18}$/).optional().or(z.literal(""));
 
-export const resendSchema = z.object({ email });
+export const profileSchema = z.object({
+  name: z.string().trim().min(2).max(80),
+  university: z.string().trim().max(120).optional(),
+  phone,
+});
+
+export const passwordChangeSchema = z.object({
+  currentPassword: z.string().min(1).max(72),
+  password: z.string().min(8).max(72).regex(/[A-Za-z]/).regex(/\d/),
+});
+
+/** The avatar is a small (<= 256px) image the browser resized itself and sent as a data URL. */
+export const AVATAR_MAX_CHARS = 120_000;
+export const AVATAR_RE = /^data:image\/(?:jpeg|png|webp);base64,[A-Za-z0-9+/]+={0,2}$/;
+
+export const loginSchema = z.object({ email, password: z.string().min(1).max(72) });
 
 // ───────────── listings ─────────────
 // Empty form inputs arrive as "", which should mean "not provided" for optional fields.

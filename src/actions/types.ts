@@ -1,7 +1,7 @@
 import type { WishlistPage } from "@/lib/wishlist";
 
 export type ErrorCode =
-  | "INVALID_CREDENTIALS" | "EMAIL_NOT_VERIFIED" | "UNAUTHENTICATED" | "VALIDATION" | "GENERIC"
+  | "INVALID_CREDENTIALS" | "EMAIL_TAKEN" | "WRONG_PASSWORD" | "UNAUTHENTICATED" | "VALIDATION" | "GENERIC"
   // deals, reviews, wishlist
   | "NOT_FOUND"             // also returned to non-participants, so a deal id can't be probed
   | "FORBIDDEN"

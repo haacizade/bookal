@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { GUEST_LISTING_LIMIT } from "@/lib/guest";
 import { getActiveUser } from "@/lib/session";
 import { createListingSchema } from "@/lib/validation";
 import { parseListingFilters, TEXTBOOK_GENRE_SLUG } from "@/lib/listing-params";
@@ -69,5 +70,9 @@ export async function createListingAction(_prev: CreateListingState, fd: FormDat
  */
 export async function fetchListingsAction(raw: unknown): Promise<ListingPage> {
   const viewerId = (await auth())?.user?.id ?? null;
+  if (!viewerId) {
+    // Guests only get the fixed "newest N" preview: no filters, no search, no paging.
+    return queryListings({ ...parseListingFilters({}), pageSize: GUEST_LISTING_LIMIT }, null);
+  }
   return queryListings(parseListingFilters(raw), viewerId);
 }

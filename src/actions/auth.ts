@@ -6,19 +6,30 @@ import { AuthError, CredentialsSignin } from "next-auth";
 import { Prisma } from "@prisma/client";
 import { signIn, signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { registerSchema, loginSchema, resendSchema } from "@/lib/validation";
+import { registerSchema, loginSchema } from "@/lib/validation";
 import { uniqueUsername } from "@/lib/username";
 import type { AuthState, ErrorCode } from "./types";
 
 /** Only same-site relative paths, so `?next=` can't be used for open redirects. */
 const safeNext = (v: FormDataEntryValue | null) => {
   const s = typeof v === "string" ? v : "";
-  return s.startsWith("/") && !s.startsWith("//") && !s.startsWith("/\\") ? s : "/dashboard";
+  return s.startsWith("/") && !s.startsWith("//") && !s.startsWith("/\\") ? s : "/";
 };
 
-async function sendVerification(user: { id: string; email: string; name: string }) {
-  if (!(await canIssueToken(user.id, "VERIFY_EMAIL"))) return;   // 1 mail / minute / user
-  await sendVerificationEmail(user.email, user.name, await issueToken(user.id, "VERIFY_EMAIL"));
+/** Signs the user in with email + password. Returns null on success, or the error code to show. */
+async function signInWithPassword(email: string, password: string): Promise<ErrorCode | null> {
+  try {
+    const res: unknown = await signIn("credentials", { email, password, redirect: false });
+    // Depending on how Auth.js is called it either throws or returns /login?error=…&code=…
+    if (typeof res === "string" && res.includes("error=")) {
+      const q = new URL(res, "http://local").searchParams;
+      return q.get("error") === "CredentialsSignin" ? "INVALID_CREDENTIALS" : "GENERIC";
+    }
+    return null;
+  } catch (e) {
+    if (!(e instanceof AuthError)) throw e;
+    return e instanceof CredentialsSignin ? "INVALID_CREDENTIALS" : "GENERIC";
+  }
 }
 
 // ───────────── register ─────────────
@@ -32,53 +43,31 @@ export async function registerAction(_prev: AuthState, fd: FormData): Promise<Au
   }
   const { name, email, password, university, phone } = parsed.data;
 
-  // Same response whether or not the email is taken, so the form can't be used to enumerate accounts.
-  const existing = await prisma.user.findUnique({ where: { email } });
-  if (existing) {
-    if (!existing.emailVerified) await sendVerification(existing);
-    redirect(`/check-email?email=${encodeURIComponent(email)}`);
+  const emailTaken = (): AuthState => ({ ok: false, code: "EMAIL_TAKEN", fields: ["email"], values });
+  if (await prisma.user.findUnique({ where: { email }, select: { id: true } })) return emailTaken();
+
+  const passwordHash = await bcrypt.hash(password, 12);
+  let created = false;
+  // Two attempts: a P2002 can be the email (lost a race with a parallel sign-up) or the generated username.
+  for (let attempt = 0; attempt < 2 && !created; attempt++) {
+    try {
+      await prisma.user.create({
+        data: {
+          name, email, passwordHash, university: university || null, phone: phone || null,
+          username: await uniqueUsername(name),
+        },
+      });
+      created = true;
+    } catch (e) {
+      if (!(e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")) throw e;
+      if (await prisma.user.findUnique({ where: { email }, select: { id: true } })) return emailTaken();
+    }
   }
+  if (!created) return { ok: false, code: "GENERIC", values };
 
-  let created: { id: string; email: string; name: string } | null = null;
-  try {
-    created = await prisma.user.create({
-      data: {
-        name, email, university: university || null, phone: phone || null,
-        passwordHash: await bcrypt.hash(password, 12),
-        username: await uniqueUsername(name),
-      },
-      select: { id: true, email: true, name: true },
-    });
-  } catch (e) {
-    // lost a race with a parallel sign-up for the same email: treat like "already exists"
-    if (!(e instanceof Prisma.PrismaClientKnownRequestError && e.code === "P2002")) throw e;
-  }
-  if (created) await sendVerification(created);
-
-  redirect(`/check-email?email=${encodeURIComponent(email)}`);
-}
-
-// ───────────── verify email ─────────────
-export async function verifyEmailAction(token: string): Promise<{ ok: boolean }> {
-  if (!token || token.length > 200) return { ok: false };
-  const ok = await prisma.$transaction(async (tx) => {
-    const userId = await consumeToken(token, "VERIFY_EMAIL", tx);
-    if (!userId) return false;
-    await tx.user.update({ where: { id: userId }, data: { emailVerified: new Date() } });
-    return true;
-  });
-  return { ok };
-}
-
-// ───────────── resend verification ─────────────
-/** Always answers "ok": the response must not reveal whether the address has an account. */
-export async function resendVerificationAction(_prev: { ok: true } | null, fd: FormData): Promise<{ ok: true }> {
-  const parsed = resendSchema.safeParse({ email: fd.get("email") });
-  if (parsed.success) {
-    const user = await prisma.user.findUnique({ where: { email: parsed.data.email } });
-    if (user && !user.emailVerified) await sendVerification(user);
-  }
-  return { ok: true };
+  // The account is active immediately: sign in right away.
+  const failure = await signInWithPassword(email, password);
+  redirect(failure ? "/login" : "/");
 }
 
 // ───────────── login / logout ─────────────
@@ -87,25 +76,11 @@ export async function loginAction(_prev: AuthState, fd: FormData): Promise<AuthS
   const parsed = loginSchema.safeParse({ email: fd.get("email"), password: fd.get("password") });
   if (!parsed.success) return { ok: false, code: "INVALID_CREDENTIALS", values };
 
-  let failure: ErrorCode | null = null;
-  try {
-    const res: unknown = await signIn("credentials", { ...parsed.data, redirect: false });
-    // Depending on how Auth.js is called it either throws or returns /login?error=…&code=…
-    if (typeof res === "string" && res.includes("error=")) {
-      const q = new URL(res, "http://local").searchParams;
-      failure = q.get("error") === "CredentialsSignin" ? mapCode(q.get("code")) : "GENERIC";
-    }
-  } catch (e) {
-    if (!(e instanceof AuthError)) throw e;
-    failure = e instanceof CredentialsSignin ? mapCode(e.code) : "GENERIC";
-  }
+  const failure = await signInWithPassword(parsed.data.email, parsed.data.password);
   if (failure) return { ok: false, code: failure, values };
 
   redirect(safeNext(fd.get("next")));
 }
-
-const mapCode = (code: string | null | undefined): ErrorCode =>
-  code === "email_not_verified" ? "EMAIL_NOT_VERIFIED" : "INVALID_CREDENTIALS";
 
 export async function logoutAction() {
   await signOut({ redirectTo: "/" });

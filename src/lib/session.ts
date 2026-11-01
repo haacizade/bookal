@@ -18,7 +18,14 @@ export async function getActiveUser() {
   const id = (await auth())?.user?.id;
   if (!id) return null;
   return prisma.user.findFirst({
-    where: { id, emailVerified: { not: null } },
+    where: { id },
     select: { id: true, role: true, isVip: true },
   });
+}
+
+/** Fresh name / avatar / VIP flag for the header (the JWT copy goes stale after a profile edit). Null when logged out. */
+export async function getViewer() {
+  const id = (await auth())?.user?.id;
+  if (!id) return null;
+  return prisma.user.findUnique({ where: { id }, select: { id: true, name: true, avatarUrl: true, isVip: true } });
 }

@@ -4,6 +4,7 @@ const PROTECTED = ["/dashboard"];                 // wishlist lives at /dashboar
 const GUEST_ONLY = ["/login", "/register"];
 
 export const authConfig = {
+  trustHost: true,                               // required when not hosted on Vercel (e.g. Netlify)
   pages: { signIn: "/login" },
   session: { strategy: "jwt", maxAge: 60 * 60 * 24 * 30 },
   providers: [],                                  // real provider is added in auth.ts
@@ -12,7 +13,7 @@ export const authConfig = {
       const { pathname } = nextUrl;
       const loggedIn = !!auth?.user;
       if (PROTECTED.some((p) => pathname === p || pathname.startsWith(p + "/"))) return loggedIn; // false → /login
-      if (loggedIn && GUEST_ONLY.includes(pathname)) return Response.redirect(new URL("/dashboard", nextUrl));
+      if (loggedIn && GUEST_ONLY.includes(pathname)) return Response.redirect(new URL("/", nextUrl));
       return true;
     },
     jwt({ token, user }) {
