@@ -1,18 +1,20 @@
 "use client";
 
 import Link from "next/link";
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
 import { createListingAction } from "@/actions/listings";
 import type { CreateListingState } from "@/actions/types";
 import type { Copy } from "@/lib/copy";
+import { TEXTBOOK_GENRE_SLUG } from "@/lib/listing-params";
 
 type Option = { id: number; slug: string };
 
-export function ListingForm({ t, errors, fields, genres, subjects, initialPhone }: {
+export function ListingForm({ t, errors, fields, genres, subjects, genreLabels, initialPhone }: {
   t: Copy["listing"];
   errors: Copy["errors"];
   fields: Copy["fields"];
   genres: Option[];
+  subjects: Option[];
   genreLabels: Copy["home"]["genres"];
   initialPhone: string;
 }) {
@@ -20,6 +22,8 @@ export function ListingForm({ t, errors, fields, genres, subjects, initialPhone 
   const failed = state && !state.ok ? state : null;
   const err = (name: keyof Copy["fields"]) => failed?.fields?.includes(name) ? fields[name] : null;
   const value = (name: string) => failed?.values?.[name] ?? "";
+  const [genreId, setGenreId] = useState<string>(value("genreId"));
+  const isTextbook = genres.some((g) => String(g.id) === genreId && g.slug === TEXTBOOK_GENRE_SLUG);
 
   if (state?.ok) {
     return (
@@ -36,10 +40,16 @@ export function ListingForm({ t, errors, fields, genres, subjects, initialPhone 
       <div className="listing-form-grid">
         <Field name="title" label={t.titleLabel} error={err("title")} defaultValue={value("title")} />
         <Field name="author" label={t.author} error={err("author")} defaultValue={value("author")} />
-        <Field name="genreId" label={t.category} error={err("genreId")} select defaultValue={value("genreId")}>
+        <Field name="genreId" label={t.category} error={err("genreId")} select defaultValue={value("genreId")} onChange={(e: React.ChangeEvent<HTMLSelectElement>) => setGenreId(e.target.value)}>
           <option value="">{t.choose}</option>
           {genres.map((genre) => <option key={genre.id} value={genre.id}>{genreLabels[genre.slug as keyof typeof genreLabels] ?? genre.slug}</option>)}
         </Field>
+        {isTextbook && (
+          <Field name="subjectId" label={t.subject} error={err("subjectId")} select defaultValue={value("subjectId")}>
+            <option value="">{t.choose}</option>
+            {subjects.map((subject) => <option key={subject.id} value={subject.id}>{t.subjectNames[subject.slug as keyof typeof t.subjectNames] ?? subject.slug}</option>)}
+          </Field>
+        )}
         <Field name="language" label={t.language} error={err("language")} select defaultValue={value("language")}>
           <option value="">{t.choose}</option>
           {Object.entries(t.languageNames).map(([code, label]) => <option key={code} value={code}>{label}</option>)}
@@ -69,7 +79,7 @@ export function ListingForm({ t, errors, fields, genres, subjects, initialPhone 
   );
 }
 
-function Field({ name, label, error, defaultValue, type = "text", select = false, children, ...inputProps }: {
+function Field({ name, label, error, defaultValue, type = "text", select = false, children, onChange, ...inputProps }: {
   name: string;
   label: string;
   error: string | null;
@@ -77,6 +87,7 @@ function Field({ name, label, error, defaultValue, type = "text", select = false
   type?: string;
   select?: boolean;
   children?: React.ReactNode;
+  onChange?: React.ChangeEventHandler<HTMLSelectElement>;
   [key: string]: unknown;
 }) {
   const id = `listing-${name}`;
@@ -84,7 +95,7 @@ function Field({ name, label, error, defaultValue, type = "text", select = false
     <div className="listing-field">
       <label htmlFor={id}>{label}</label>
       {select
-        ? <select id={id} name={name} defaultValue={defaultValue} aria-invalid={!!error}>{children}</select>
+        ? <select id={id} name={name} defaultValue={defaultValue} aria-invalid={!!error} onChange={onChange}>{children}</select>
         : <input id={id} name={name} type={type} defaultValue={defaultValue} aria-invalid={!!error} {...inputProps as React.InputHTMLAttributes<HTMLInputElement>} />}
       {error && <span className="pf-err">{error}</span>}
     </div>

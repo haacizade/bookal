@@ -75,6 +75,7 @@ const az = {
     type: "Elan növü", sale: "Satış", exchange: "Mübadilə", price: "Qiymət (AZN)", description: "Təsvir", image: "Şəkil linki",
     phone: "Əlaqə telefonu", phoneHint: "Profilində saxlanacaq və elanlarında alıcılara göstəriləcək.", submit: "Elanı göndər", success: "Elan təsdiq üçün göndərildi.",
     back: "Elanlara qayıt", choose: "Seç", newCondition: "Yeni", usedCondition: "İşlənmiş", highlighted: "Qeydli",
+    subject: "Fənn", subjectNames: { mathematics: "Riyaziyyat", physics: "Fizika", chemistry: "Kimya", computer_science: "Kompüter elmləri", electrical_engineering: "Elektrik mühəndisliyi", mechanical_engineering: "Mexanika mühəndisliyi", economics: "İqtisadiyyat", law: "Hüquq", medicine: "Tibb", foreign_languages: "Xarici dillər", humanities: "Humanitar fənlər", other: "Digər" },
   },
   admin: {
     title: "Admin paneli", nav: "Admin", users: "İstifadəçilər", listings: "Elanlar", pendingListings: "Təsdiq gözləyən elanlar",
@@ -218,6 +219,7 @@ const en: Copy = {
     type: "Listing type", sale: "For sale", exchange: "Exchange", price: "Price (AZN)", description: "Description", image: "Image URL",
     phone: "Contact phone", phoneHint: "Saved to your profile and shown to buyers on your listings.", submit: "Submit listing", success: "Listing submitted for approval.",
     back: "Back to listings", choose: "Choose", newCondition: "New", usedCondition: "Used", highlighted: "Highlighted",
+    subject: "Subject", subjectNames: { mathematics: "Mathematics", physics: "Physics", chemistry: "Chemistry", computer_science: "Computer science", electrical_engineering: "Electrical engineering", mechanical_engineering: "Mechanical engineering", economics: "Economics", law: "Law", medicine: "Medicine", foreign_languages: "Foreign languages", humanities: "Humanities", other: "Other" },
   },
   admin: {
     title: "Admin panel", nav: "Admin", users: "Users", listings: "Listings", pendingListings: "Listings awaiting approval",
@@ -320,7 +322,7 @@ const tr: Copy = {
     suspendedTitle: "Hesap erişimi askıya alındı", suspendedText: "Hesabın şu anda etkin değil. Devam etmek için çıkış yap.",
   },
   listing: {
-    title: "Yeni ilan", sub: "Kitap bilgilerini gir. İlanın yönetici onayından sonra yayınlanacak.", titleLabel: "Kitap adı", author: "Yazar", category: "Kategori", language: "Kitabın dili", languageNames: { AZ: "Azerbaycan Türkçesi", TR: "Türkçe", EN: "İngilizce", RU: "Rusça", OTHER: "Diğer" }, condition: "Durumu", type: "İlan türü", sale: "Satış", exchange: "Takas", price: "Fiyat (AZN)", description: "Açıklama", image: "Görsel bağlantısı", phone: "İletişim telefonu", phoneHint: "Profiline kaydedilir ve ilanlarında alıcılara gösterilir.", submit: "İlanı gönder", success: "İlan onay için gönderildi.", back: "İlanlara dön", choose: "Seç", newCondition: "Yeni", usedCondition: "Kullanılmış", highlighted: "Notlu",
+    title: "Yeni ilan", sub: "Kitap bilgilerini gir. İlanın yönetici onayından sonra yayınlanacak.", titleLabel: "Kitap adı", author: "Yazar", category: "Kategori", language: "Kitabın dili", languageNames: { AZ: "Azerbaycan Türkçesi", TR: "Türkçe", EN: "İngilizce", RU: "Rusça", OTHER: "Diğer" }, condition: "Durumu", type: "İlan türü", sale: "Satış", exchange: "Takas", price: "Fiyat (AZN)", description: "Açıklama", image: "Görsel bağlantısı", phone: "İletişim telefonu", phoneHint: "Profiline kaydedilir ve ilanlarında alıcılara gösterilir.", submit: "İlanı gönder", success: "İlan onay için gönderildi.", back: "İlanlara dön", choose: "Seç", newCondition: "Yeni", usedCondition: "Kullanılmış", highlighted: "Notlu", subject: "Ders", subjectNames: { mathematics: "Matematik", physics: "Fizik", chemistry: "Kimya", computer_science: "Bilgisayar bilimleri", electrical_engineering: "Elektrik mühendisliği", mechanical_engineering: "Makine mühendisliği", economics: "Ekonomi", law: "Hukuk", medicine: "Tıp", foreign_languages: "Yabancı diller", humanities: "Beşeri bilimler", other: "Diğer" },
   },
   admin: {
     title: "Yönetici paneli", nav: "Yönetici", users: "Kullanıcılar", listings: "İlanlar", pendingListings: "Onay bekleyen ilanlar", transactions: "İşlemler", vipRequests: "VIP başvuruları", approve: "Onayla", reject: "Reddet", delete: "Sil", suspend: "Askıya al", restore: "Geri yükle", role: "Rol", status: "Durum", email: "E-posta", seller: "Satıcı", buyer: "Alıcı", date: "Tarih", price: "Fiyat", empty: "Gösterilecek kayıt yok.", actionDone: "Değişiklikler kaydedildi.", activeStatus: "Aktif",
