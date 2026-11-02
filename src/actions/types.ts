@@ -33,6 +33,8 @@ export type CreateListingState =
     }
   | { ok: true; id: string };
 
+export type VipRequestState = null | { ok: false; code: ErrorCode } | { ok: true };
+
 // ───────────── deals, reviews, wishlist ─────────────
 export type ActionFail = { ok: false; code: ErrorCode; fields?: string[] };
 

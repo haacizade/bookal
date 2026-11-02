@@ -10,3 +10,7 @@ ALTER TABLE "Transaction"
 
 ALTER TABLE "Listing"
   ADD CONSTRAINT listing_price_nonneg CHECK (price >= 0);
+
+-- Prisma cannot express a unique constraint for only pending applications.
+CREATE UNIQUE INDEX vip_request_one_pending_per_user
+  ON "VipRequest" ("userId") WHERE status = 'PENDING';

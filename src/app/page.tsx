@@ -13,7 +13,7 @@ const CHIPS = ["all", "textbook", "fiction", "science", "language_learning", "ot
 
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const [t, viewer, sp] = await Promise.all([getCopy(), getViewer(), searchParams]);
-  const viewerId = viewer?.id ?? null;
+  const viewerId = viewer && !viewer.isSuspended ? viewer.id : null;
   const h = t.home;
 
   // Guests always get the same fixed preview: the newest N listings, no search / filters / paging.
@@ -31,7 +31,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   };
   const chipHref = (c: string) => {
     const target = c === "all" ? "/" : `/?genre=${c}`;
-    return viewerId ? `${target}#elanlar` : `/login?next=${encodeURIComponent(target)}`;
+    return viewerId ? `${target}#elanlar` : viewer?.isSuspended ? "/suspended" : `/login?next=${encodeURIComponent(target)}`;
   };
 
   return (
@@ -45,11 +45,11 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             <p>{h.heroSub}</p>
             <div className="hero-ctas">
               <a href="#elanlar" className="btn btn-mustard">{h.browse}</a>
-              <Link href={viewer ? "/dashboard" : "/register"} className="btn btn-ghost">{h.post}</Link>
+              <Link href={viewerId ? "/listings/new" : viewer?.isSuspended ? "/suspended" : "/register"} className="btn btn-ghost">{h.post}</Link>
             </div>
             {/* Guests can't search: submitting sends them to the login page, then back here. */}
-            <form className="searchbar" action={viewer ? "/" : "/login"} role="search">
-              {!viewer && <input type="hidden" name="next" value="/" />}
+            <form className="searchbar" action={viewerId ? "/" : viewer?.isSuspended ? "/suspended" : "/login"} role="search">
+              {!viewerId && !viewer?.isSuspended && <input type="hidden" name="next" value="/" />}
               <input type="text" name="q" defaultValue={q} placeholder={h.searchPh} aria-label={h.searchPh}
                 autoComplete="off" enterKeyHint="search" />
             </form>
@@ -72,7 +72,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
             <div className="empty">{h.empty}</div>
           ) : (
             <div className="grid">
-              {data.items.map((item, i) => <ListingCard key={item.id} item={item} t={h} index={i} />)}
+              {data.items.map((item, i) => <ListingCard key={item.id} item={item} t={h} index={i} canWishlist={!!viewerId} wishlistLabels={t.wishlist} />)}
             </div>
           )}
 

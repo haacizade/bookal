@@ -22,9 +22,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         const { email, password } = parsed.data;
         const user = await prisma.user.findUnique({ where: { email } });
         const passwordOk = await bcrypt.compare(password, user?.passwordHash ?? DUMMY_HASH);
-        if (!user || !passwordOk) throw new InvalidCredentials();
+        if (!user || !passwordOk || user.isSuspended) throw new InvalidCredentials();
 
-        return { id: user.id, email: user.email, name: user.name, image: user.avatarUrl, role: user.role, isVip: user.isVip };
+        return { id: user.id, email: user.email, name: user.name, image: user.avatarUrl, role: user.role, isVip: user.isVip && !!user.vipExpiresAt && user.vipExpiresAt > new Date() };
       },
     }),
   ],

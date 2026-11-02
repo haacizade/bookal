@@ -18,6 +18,11 @@
 .bk .bk-header{position:sticky; top:0; z-index:20; background:color-mix(in srgb, var(--bg) 86%, transparent); backdrop-filter:blur(16px) saturate(170%); -webkit-backdrop-filter:blur(16px) saturate(170%); border-bottom:1px solid var(--line);}
 .bk .hd-row{display:flex; align-items:center; justify-content:space-between; padding:12px 24px; gap:22px; flex-wrap:wrap; max-width:1208px; margin:0 auto;}
 .bk .hd-right{display:flex; align-items:center; gap:10px; flex-shrink:0;}
+.bk .preference-control{height:38px; min-width:38px; display:inline-flex; align-items:center; justify-content:center; border:1px solid var(--line); border-radius:8px; background:var(--card); color:var(--ink);}
+.bk .preference-control select{height:100%; min-width:54px; padding:0 7px; border:0; background:transparent; color:inherit; font:700 12px var(--body); cursor:pointer;}
+.bk button.preference-control{width:38px; padding:8px; cursor:pointer;}
+.bk .preference-control svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round;}
+.bk .preference-control:hover{border-color:var(--navy);}
 .bk .logo{display:flex; align-items:center; gap:12px; text-decoration:none;}
 .bk .logo-mark{height:42px; width:42px; display:block; flex-shrink:0; border-radius:12px; transition:transform .4s var(--ease);}
 .bk .logo:hover .logo-mark{transform:rotate(-4deg) scale(1.06);}
@@ -87,7 +92,7 @@
 .bk .grid-head h2::after{content:''; display:block; width:56px; height:5px; border-radius:5px; background:var(--gold); margin-top:10px;}
 .bk .count{color:var(--sub); font-size:14px; font-weight:700;}
 .bk .grid{display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:26px 20px;}
-.bk .card{--c:var(--c-other); background:var(--card); border-radius:6px 14px 14px 6px; padding:0 0 16px; display:flex; flex-direction:column; gap:7px; box-shadow:var(--shadow-sm), 0 0 0 1px var(--line); overflow:hidden; animation:cardIn .7s var(--ease) both; animation-delay:calc(min(var(--k,0),12) * 55ms); transition:transform .25s var(--ease), box-shadow .3s;}
+.bk .card{--c:var(--c-other); background:var(--card); border-radius:6px 14px 14px 6px; padding:0 0 16px; display:flex; flex-direction:column; gap:7px; box-shadow:var(--shadow-sm), 0 0 0 1px var(--line); overflow:hidden; animation:cardIn .7s var(--ease) both; animation-delay:calc(min(var(--k,0),12) * 55ms); transition:transform .25s var(--ease), box-shadow .3s,background-color .2s,color .2s;}
 .bk .card:hover{transform:translateY(-8px); box-shadow:0 28px 50px -22px rgba(14,20,51,.5), 0 0 0 1px var(--c);}
 .bk .card[data-cat=textbook]{--c:var(--c-textbook);}
 .bk .card[data-cat=fiction]{--c:var(--c-fiction);}
@@ -101,12 +106,19 @@
 .bk .card:hover .cover::after{transform:translateX(120%);}
 .bk .cover span{font:800 17px/1.2 var(--display); letter-spacing:-.015em; display:-webkit-box; -webkit-line-clamp:3; -webkit-box-orient:vertical; overflow:hidden; text-wrap:balance; position:relative;}
 .bk .cover img{position:absolute; inset:0; width:100%; height:100%; object-fit:cover;}
+.bk a.cover{text-decoration:none;color:#fff;}
+.bk .card-title{font:800 14px/1.35 var(--display);margin-top:5px;margin-bottom:0;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.bk .card-title a{color:var(--ink);text-decoration:none;}
+.bk .card-title a:hover{text-decoration:underline;text-underline-offset:3px;}
 .bk .card .meta:first-of-type{font-weight:800; color:var(--ink); font-size:14px; margin-top:6px;}
 .bk .meta{font-size:12.5px; color:var(--sub);}
 .bk .row-between{display:flex; justify-content:space-between; align-items:center; margin-top:auto; padding-top:6px; gap:8px;}
 .bk .price{font:800 19px/1 var(--display); color:var(--gold-ink); letter-spacing:-.01em; display:inline-block; transition:transform .3s var(--ease);}
 .bk .card:hover .price{transform:scale(1.12);}
 .bk .badge{font-size:11px; font-weight:800; padding:4px 10px; border-radius:100px; background:color-mix(in srgb, var(--c) 14%, transparent); color:var(--c);}
+.bk .seller-phone{font-size:13px;font-weight:800;color:var(--ink);padding-top:2px;}
+.bk .seller-phone a{color:inherit;text-decoration:none;}
+.bk .seller-phone a:hover{text-decoration:underline;text-underline-offset:3px;}
 :root[data-theme="dark"] .bk .badge{color:var(--ink);}
 .bk .empty{color:var(--sub); font-size:15px; padding:56px 0; text-align:center;}
 .bk .pager{display:flex; align-items:center; justify-content:center; gap:16px; margin-top:34px; font-size:14px; font-weight:700; color:var(--sub);}

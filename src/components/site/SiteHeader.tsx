@@ -2,12 +2,14 @@ import Link from "next/link";
 import { logoutAction } from "@/actions/auth";
 import type { Copy } from "@/lib/copy";
 import { Avatar } from "./Avatar";
+import { LanguageSwitcher } from "./LanguageSwitcher";
+import { ThemeToggle } from "./ThemeToggle";
 import "@/app/home.css";
 import "@/app/profile.css";
 
-export type HeaderViewer = { name: string; avatarUrl: string | null; isVip: boolean } | null;
+export type HeaderViewer = { id?: string; name: string; avatarUrl: string | null; isVip: boolean; role?: "USER" | "ADMIN"; isSuspended?: boolean } | null;
 
-export function SiteHeader({ t, viewer, active }: { t: Copy; viewer: HeaderViewer; active: "home" | "profile" }) {
+export function SiteHeader({ t, viewer, active }: { t: Copy; viewer: HeaderViewer; active: "home" | "profile" | "wishlist" | "about" | "new-listing" | "admin" }) {
   const h = t.home;
   return (
     <header className="bk-header">
@@ -23,15 +25,21 @@ export function SiteHeader({ t, viewer, active }: { t: Copy; viewer: HeaderViewe
         <nav className="pagenav">
           <Link href="/" className={active === "home" ? "active" : undefined}>{h.navHome}</Link>
           <Link href="/#elanlar">{h.navListings}</Link>
-          {viewer && <Link href="/dashboard" className={active === "profile" ? "active" : undefined}>{t.profile.title}</Link>}
+          {viewer && !viewer.isSuspended && <Link href="/dashboard/wishlist" className={active === "wishlist" ? "active" : undefined}>{h.navWishlist}</Link>}
+          <Link href="/about" className={active === "about" ? "active" : undefined}>{h.navAbout}</Link>
+          {viewer && !viewer.isSuspended && <Link href="/listings/new" className={active === "new-listing" ? "active" : undefined}>{h.post}</Link>}
+          {viewer?.role === "ADMIN" && !viewer.isSuspended && <Link href="/admin" className={active === "admin" ? "active" : undefined}>{t.admin.nav}</Link>}
+          {viewer && !viewer.isSuspended && <Link href="/dashboard" className={active === "profile" ? "active" : undefined}>{t.profile.title}</Link>}
         </nav>
         <div className="hd-right">
+          <LanguageSwitcher locale={t.locale} label={h.language} />
+          <ThemeToggle lightLabel={h.themeLight} darkLabel={h.themeDark} />
           {viewer ? (
             <>
               <Link href="/dashboard" className="pill-user">
                 <Avatar name={viewer.name} src={viewer.avatarUrl} size={26} />
                 <span className="pill-name">{viewer.name}</span>
-                {viewer.isVip && <span className="vip-badge">VIP</span>}
+                {viewer.isVip && !viewer.isSuspended && <span className="vip-badge">VIP</span>}
               </Link>
               <form action={logoutAction}><button className="btn btn-ghost">{h.logout}</button></form>
             </>

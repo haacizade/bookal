@@ -1,6 +1,6 @@
 import type { NextAuthConfig } from "next-auth";
 
-const PROTECTED = ["/dashboard"];                 // wishlist lives at /dashboard/wishlist
+const PROTECTED = ["/dashboard", "/admin", "/listings/new"];
 const GUEST_ONLY = ["/login", "/register"];
 
 export const authConfig = {

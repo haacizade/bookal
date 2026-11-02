@@ -1,0 +1,17 @@
+.admin-page{max-width:1120px;padding-top:42px;padding-bottom:72px}
+.admin-page h1{font-size:38px;margin:0 0 28px}
+.admin-section{padding:24px 0;border-top:1px solid var(--line)}
+.admin-section h2{display:flex;align-items:center;gap:12px;font-size:22px;margin:0 0 16px}
+.admin-section h2 span{font:700 12px var(--body);color:var(--sub);background:var(--bg-soft);padding:4px 8px;border-radius:20px}
+.admin-list{display:grid;gap:10px}
+.admin-row{display:flex;justify-content:space-between;align-items:center;gap:20px;padding:14px 0;border-bottom:1px solid var(--line)}
+.admin-row p,.admin-row small{display:block;color:var(--sub);margin:3px 0 0;font-size:13px}
+.admin-actions{display:flex;gap:8px;flex-shrink:0}
+.admin-actions .btn{min-height:38px;padding:8px 13px}
+.admin-table-wrap{overflow:auto}
+.admin-table{width:100%;border-collapse:collapse;min-width:680px;text-align:left;font-size:13px}
+.admin-table th,.admin-table td{padding:12px 10px;border-bottom:1px solid var(--line);vertical-align:middle}
+.admin-table th{color:var(--sub);font-size:11px;text-transform:uppercase}
+.admin-table small{display:block;color:var(--sub);font-size:11px;word-break:break-all}
+.admin-table .btn{white-space:nowrap}
+@media(max-width:680px){.admin-page{padding-top:30px;padding-bottom:50px}.admin-page h1{font-size:30px}.admin-row{align-items:flex-start;flex-direction:column}.admin-actions{flex-wrap:wrap}}

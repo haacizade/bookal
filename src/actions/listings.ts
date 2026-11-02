@@ -1,7 +1,6 @@
 "use server";
 
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
 import { GUEST_LISTING_LIMIT } from "@/lib/guest";
 import { getActiveUser } from "@/lib/session";
@@ -11,7 +10,7 @@ import { queryListings, type ListingPage } from "@/lib/listings";
 import type { CreateListingState } from "./types";
 
 // Form inputs echoed back on failure (React 19 resets the form after an action).
-const ECHO = ["title", "author", "description", "language", "condition", "type", "genreId", "subjectId", "price", "coverUrl"] as const;
+const ECHO = ["title", "author", "description", "language", "condition", "type", "genreId", "subjectId", "price", "coverUrl", "phone"] as const;
 
 // ───────────── create ─────────────
 export async function createListingAction(_prev: CreateListingState, fd: FormData): Promise<CreateListingState> {
@@ -25,7 +24,9 @@ export async function createListingAction(_prev: CreateListingState, fd: FormDat
 
   const parsed = createListingSchema.safeParse(input);
   if (!parsed.success) return invalid(Object.keys(parsed.error.flatten().fieldErrors));
-  const { title, author, description, language, condition, type, genreId, subjectId, coverUrl } = parsed.data;
+  const { title, author, description, language, condition, type, genreId, subjectId, coverUrl, phone } = parsed.data;
+  const sellerPhone = phone || user.phone;
+  if (!sellerPhone || !/^\+?[\d\s-]{7,18}$/.test(sellerPhone)) return invalid(["phone"]);
 
   // SALE needs an explicit price (0 = free). EXCHANGE has no price, so whatever was sent is discarded.
   const price = type === "EXCHANGE" ? "0" : parsed.data.price;
@@ -40,19 +41,22 @@ export async function createListingAction(_prev: CreateListingState, fd: FormDat
   if (subjectId && !subject) return invalid(["subjectId"]);
 
   try {
-    const listing = await prisma.listing.create({
-      data: {
-        sellerId: user.id,
-        title, author, language, condition, type, price, genreId,
-        description: description ?? null,
-        // A subject is only meaningful for textbooks; drop it for other genres instead of storing noise.
-        subjectId: genre.slug === TEXTBOOK_GENRE_SLUG ? (subjectId ?? null) : null,
-        coverUrl: coverUrl ?? null,
-        // status defaults to ACTIVE
-      },
-      select: { id: true },
+    const listing = await prisma.$transaction(async (db) => {
+      if (sellerPhone !== user.phone) await db.user.update({ where: { id: user.id }, data: { phone: sellerPhone } });
+      return db.listing.create({
+        data: {
+          sellerId: user.id,
+          title, author, language, condition, type, price, genreId,
+          description: description ?? null,
+          subjectId: genre.slug === TEXTBOOK_GENRE_SLUG ? (subjectId ?? null) : null,
+          coverUrl: coverUrl ?? null,
+          status: "PENDING_APPROVAL",
+        },
+        select: { id: true },
+      });
     });
-    revalidatePath("/");                      // the catalog (home page from step 2 on)
+    revalidatePath("/");
+    revalidatePath("/dashboard");
     return { ok: true, id: listing.id };
   } catch (e) {
     console.error("[createListingAction]", e);
@@ -69,7 +73,7 @@ export async function createListingAction(_prev: CreateListingState, fd: FormDat
  * it, drops what it doesn't understand, and clamps page / pageSize.
  */
 export async function fetchListingsAction(raw: unknown): Promise<ListingPage> {
-  const viewerId = (await auth())?.user?.id ?? null;
+  const viewerId = (await getActiveUser())?.id ?? null;
   if (!viewerId) {
     // Guests only get the fixed "newest N" preview: no filters, no search, no paging.
     return queryListings({ ...parseListingFilters({}), pageSize: GUEST_LISTING_LIMIT }, null);

@@ -33,7 +33,7 @@
 }
 
 @layer base {
-  body { @apply bg-bg font-sans text-ink antialiased; }
+  body { @apply bg-bg font-sans text-ink antialiased; transition: background-color .2s, color .2s; }
   h1, h2, h3 { @apply font-display font-extrabold tracking-tight; }
   :focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; border-radius: 6px; }
 }

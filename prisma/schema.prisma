@@ -34,6 +34,7 @@ enum ListingType {
 }
 
 enum ListingStatus {
+  PENDING_APPROVAL
   ACTIVE
   RESERVED
   COMPLETED
@@ -44,6 +45,12 @@ enum TransactionStatus {
   PENDING
   COMPLETED
   CANCELLED
+}
+
+enum VipRequestStatus {
+  PENDING
+  APPROVED
+  REJECTED
 }
 
 // ───────────── users ─────────────
@@ -59,6 +66,8 @@ model User {
   avatarUrl     String?
   role          Role      @default(USER)
   isVip         Boolean   @default(false)
+  vipExpiresAt  DateTime?
+  isSuspended   Boolean   @default(false)
 
   // denormalised review aggregates (updated in the same DB transaction as a new Review)
   ratingAvg     Decimal   @default(0) @db.Decimal(3, 2)
@@ -73,6 +82,7 @@ model User {
   sales           Transaction[] @relation("TxSeller")
   reviewsWritten  Review[]      @relation("ReviewAuthor")
   reviewsReceived Review[]      @relation("ReviewTarget")
+  vipRequests     VipRequest[]
 }
 
 // ───────────── catalog ─────────────
@@ -107,7 +117,7 @@ model Listing {
   price       Decimal       @default(0) @db.Decimal(10, 2)
   coverUrl    String?
   pdfUrl      String?                                // existing VIP PDF feature
-  status      ListingStatus @default(ACTIVE)
+  status      ListingStatus @default(PENDING_APPROVAL)
   createdAt   DateTime      @default(now())
   updatedAt   DateTime      @updatedAt
 
@@ -178,4 +188,17 @@ model WishlistItem {
 
   @@id([userId, listingId])
   @@index([listingId])
+}
+
+model VipRequest {
+  id         String           @id @default(cuid())
+  userId     String
+  status     VipRequestStatus @default(PENDING)
+  createdAt  DateTime         @default(now())
+  reviewedAt DateTime?
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([status, createdAt(sort: Desc)])
+  @@index([userId, status])
 }

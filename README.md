@@ -12,6 +12,22 @@ npm run dev
 Registration signs the user in immediately; there is no email verification.
 Pinned to Prisma 6 and Next.js 15 (`middleware.ts`); Next 16 renames it to `proxy.ts`, Prisma 7 moves `url` into `prisma.config.ts`.
 
+## Marketplace controls
+
+- The header language cookie supports Azerbaijani (`az`), Turkish (`tr`) and English (`en`). Theme choice is stored in `localStorage`.
+- Listings are created at `/listings/new`, require a valid seller phone number, and enter `PENDING_APPROVAL`. Approved listings become visible in the catalog; rejected or removed listings are archived to preserve transaction history.
+- `/admin` re-checks the user's database role on each request. The seed script grants the role to the account matching `ADMIN_EMAIL`.
+- VIP access is granted after an administrator approves a request and expires after one year. No payment provider is configured, so the current flow is an approval request rather than a checkout.
+
+For an existing database, create and apply a Prisma migration after changing the schema:
+
+```bash
+npm run db:migrate -- --name marketplace_controls
+psql "$DATABASE_URL" -f prisma/constraints.sql
+```
+
+The SQL file adds the one-pending-VIP-request-per-user partial unique index in addition to the application checks.
+
 ## Step 2 (part 1): listings
 
 - `src/actions/auth.ts` (step 1) already covers register / login / logout. Use `getActiveUser()` from `src/lib/session.ts` in any new Server Action that must return a result instead of redirecting.

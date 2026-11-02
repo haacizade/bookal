@@ -6,7 +6,12 @@ import { prisma } from "@/lib/prisma";
 export async function requireUser() {
   const session = await auth();
   if (!session?.user) redirect("/login");
-  return session.user;
+  const user = await prisma.user.findFirst({
+    where: { id: session.user.id, isSuspended: false },
+    select: { id: true, role: true, isVip: true },
+  });
+  if (!user) redirect("/suspended");
+  return user;
 }
 
 /**
@@ -18,8 +23,8 @@ export async function getActiveUser() {
   const id = (await auth())?.user?.id;
   if (!id) return null;
   return prisma.user.findFirst({
-    where: { id },
-    select: { id: true, role: true, isVip: true },
+    where: { id, isSuspended: false },
+    select: { id: true, role: true, isVip: true, vipExpiresAt: true, phone: true },
   });
 }
 
@@ -27,5 +32,13 @@ export async function getActiveUser() {
 export async function getViewer() {
   const id = (await auth())?.user?.id;
   if (!id) return null;
-  return prisma.user.findUnique({ where: { id }, select: { id: true, name: true, avatarUrl: true, isVip: true } });
+  const user = await prisma.user.findUnique({ where: { id }, select: { id: true, name: true, avatarUrl: true, isVip: true, vipExpiresAt: true, role: true, isSuspended: true } });
+  if (!user) return null;
+  return { ...user, isVip: user.isVip && !!user.vipExpiresAt && user.vipExpiresAt > new Date() };
+}
+
+export async function requireAdmin() {
+  const user = await getActiveUser();
+  if (!user || user.role !== "ADMIN") redirect("/");
+  return user;
 }

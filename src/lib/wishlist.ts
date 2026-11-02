@@ -35,7 +35,7 @@ export async function queryWishlist(userId: string, { page, pageSize }: { page: 
     items: rows.map((r) => ({
       addedAt: r.createdAt.toISOString(),
       status: r.listing.status,
-      listing: toListingCard(r.listing, true),
+      listing: toListingCard(r.listing, true, true),
     })),
     total,
     page,

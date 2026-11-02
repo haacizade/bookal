@@ -21,6 +21,7 @@ export type ListingCard = {
     username: string;
     name: string;
     university: string | null;
+    phone: string | null;
     avatarUrl: string | null;
     isVip: boolean;
     ratingAvg: number;
@@ -43,11 +44,11 @@ export const listingCardSelect = {
   genre: { select: { slug: true } },
   subject: { select: { slug: true } },
   seller: {
-    select: { username: true, name: true, university: true, avatarUrl: true, isVip: true, ratingAvg: true, ratingCount: true },
+    select: { username: true, name: true, university: true, phone: true, avatarUrl: true, isVip: true, ratingAvg: true, ratingCount: true },
   },
 } satisfies Prisma.ListingSelect;
 
-export function toListingCard(r: Prisma.ListingGetPayload<{ select: typeof listingCardSelect }>, isWishlisted: boolean): ListingCard {
+export function toListingCard(r: Prisma.ListingGetPayload<{ select: typeof listingCardSelect }>, isWishlisted: boolean, canContact: boolean): ListingCard {
   return {
     id: r.id,
     title: r.title,
@@ -62,7 +63,7 @@ export function toListingCard(r: Prisma.ListingGetPayload<{ select: typeof listi
     subject: r.subject?.slug ?? null,
     createdAt: r.createdAt.toISOString(),
     isWishlisted,
-    seller: { ...r.seller, ratingAvg: r.seller.ratingAvg.toNumber() },
+    seller: { ...r.seller, phone: canContact ? r.seller.phone : null, ratingAvg: r.seller.ratingAvg.toNumber() },
   };
 }
 
@@ -109,7 +110,7 @@ export async function queryListings(filters: ListingFilters, viewerId: string | 
   }
 
   return {
-    items: rows.map((r) => toListingCard(r, wished.has(r.id))),
+    items: rows.map((r) => toListingCard(r, wished.has(r.id), viewerId !== null)),
     total,
     page,
     pageSize,

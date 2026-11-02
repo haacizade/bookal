@@ -52,6 +52,7 @@ export const createListingSchema = z.object({
   price: z.preprocess(normalizePriceInput, z.string().regex(PRICE_RE).optional()),
   // https only (no mixed content). Uploading is a separate concern; this takes the resulting URL.
   coverUrl: z.preprocess(blankToUndefined, z.string().trim().max(500).url().startsWith("https://").optional()),
+  phone: z.preprocess(blankToUndefined, z.string().trim().regex(/^\+?[\d\s-]{7,18}$/).optional()),
 });
 
 // ───────────── deals & reviews ─────────────

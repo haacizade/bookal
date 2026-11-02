@@ -1,8 +1,9 @@
 import { cookies } from "next/headers";
 
-export type Locale = "az" | "en";
+export type Locale = "az" | "tr" | "en";
 
 const az = {
+  locale: "az" as Locale,
   brand: "Bookal",
   panelTitle: "Oxuyub bitirdiyin kitabın yeni oxucusunu tap.",
   panelText: "Dərsliklər və kitablar semestrdən semestrə əldən-ələ keçir.",
@@ -18,7 +19,7 @@ const az = {
     submit: "Qeydiyyatdan keç", haveAccount: "Artıq hesabın var?", login: "Daxil ol",
   },
   home: {
-    navHome: "Ana səhifə", navListings: "Elanlar", navLogin: "Giriş / Qeydiyyat", logout: "Çıxış", tagline: "KİTAB PLATFORMASI",
+    navHome: "Ana səhifə", navListings: "Elanlar", navWishlist: "İstək siyahısı", navAbout: "Haqqında", navLogin: "Giriş / Qeydiyyat", logout: "Çıxış", tagline: "KİTAB PLATFORMASI",
     heroTitle: "Köhnə kitablarına yeni sahib tap",
     heroSub: "Oxuyub bitirdiyin kitabları paylaş, axtardığını tap. İstifadə olunmuş kitabların mübadiləsi və satışı üçün hamıya açıq elan lövhəsi.",
     browse: "Elanlara bax", post: "+ Elan yerləşdir", searchPh: "Kitab adı, müəllif və ya fənn axtar...",
@@ -28,6 +29,10 @@ const az = {
     },
     listingsTitle: "Elanlar", countSuffix: " elan", empty: "Hələ elan yoxdur. İlk elanı sən yerləşdir!",
     free: "Pulsuz", exchange: "Mübadilə", currency: "AZN",
+    contactLogin: "Əlaqə nömrəsi üçün daxil ol",
+    language: "Dil", themeLight: "Açıq rejimə keç", themeDark: "Qaranlıq rejimə keç",
+    authorLabel: "Müəllif", descriptionLabel: "Təsvir", contactSeller: "Satıcı ilə əlaqə saxla",
+    pdfDownload: "PDF-i aç", pdfRequiresVip: "PDF faylına giriş üçün aktiv VIP lazımdır.",
     conditions: { NEW: "Yeni", USED: "İşlənmiş", HIGHLIGHTED: "Qeydli" },
     howTitle: "Necə işləyir",
     steps: [
@@ -59,6 +64,45 @@ const az = {
     passwordTitle: "Şifrəni dəyiş", passwordSub: "Təhlükəsizlik üçün əvvəlcə cari şifrəni yaz.",
     currentPassword: "Cari şifrə", newPassword: "Yeni şifrə", newPasswordHint: "Ən azı 8 simvol, hərf və rəqəm ilə.",
     changePassword: "Şifrəni yenilə", passwordChanged: "Şifrə dəyişdirildi.",
+    vipTitle: "Bookal VIP", vipSub: "VIP üzvlüyü aktiv elanlarındakı PDF kitablara giriş verir.",
+    vipStatus: "VIP statusu", vipActiveUntil: "Aktivdir, bitmə tarixi", vipInactive: "Aktiv deyil", vipPending: "Sorğun nəzərdən keçirilir.",
+    vipRequest: "VIP üçün müraciət et", vipRequested: "VIP müraciəti göndərildi.", vipRequestPending: "Müraciət gözləyir", vipRequestAgain: "Yeni müraciət yarat",
+    suspendedTitle: "Hesaba giriş dayandırılıb", suspendedText: "Hesabın hazırda aktiv deyil. Davam etmək üçün hesabdan çıx.",
+  },
+  listing: {
+    title: "Yeni elan", sub: "Kitab məlumatlarını daxil et. Elan admin təsdiqindən sonra yayımlanacaq.",
+    titleLabel: "Kitabın adı", author: "Müəllif", category: "Kateqoriya", language: "Kitabın dili", languageNames: { AZ: "Azərbaycan dili", TR: "Türk dili", EN: "İngilis dili", RU: "Rus dili", OTHER: "Digər" }, condition: "Vəziyyəti",
+    type: "Elan növü", sale: "Satış", exchange: "Mübadilə", price: "Qiymət (AZN)", description: "Təsvir", image: "Şəkil linki",
+    phone: "Əlaqə telefonu", phoneHint: "Profilində saxlanacaq və elanlarında alıcılara göstəriləcək.", submit: "Elanı göndər", success: "Elan təsdiq üçün göndərildi.",
+    back: "Elanlara qayıt", choose: "Seç", newCondition: "Yeni", usedCondition: "İşlənmiş", highlighted: "Qeydli",
+  },
+  admin: {
+    title: "Admin paneli", nav: "Admin", users: "İstifadəçilər", listings: "Elanlar", pendingListings: "Təsdiq gözləyən elanlar",
+    transactions: "Sövdələşmələr", vipRequests: "VIP müraciətləri", approve: "Təsdiqlə", reject: "Rədd et", delete: "Sil",
+    suspend: "Dayandır", restore: "Bərpa et", role: "Rol", status: "Vəziyyət", email: "E-poçt", seller: "Satıcı",
+    buyer: "Alıcı", date: "Tarix", price: "Qiymət", empty: "Məlumat yoxdur.", actionDone: "Dəyişiklik yadda saxlandı.", activeStatus: "Aktiv",
+  },
+  wishlist: {
+    title: "İstək siyahım", sub: "Bəyəndiyin kitabları burada saxla və sonra qayıt.",
+    countSuffix: " kitab", empty: "İstək siyahın boşdur. Elanlarda ürək işarəsinə basıb kitab əlavə et.",
+    browse: "Elanlara bax", reserved: "Rezerv olunub", sold: "Satılıb",
+    add: "İstək siyahısına əlavə et", remove: "İstək siyahısından çıxar", loginToSave: "Saxlamaq üçün daxil ol",
+  },
+  about: {
+    title: "Bookal haqqında",
+    sub: "Oxucudan oxucuya kitab platforması: sadə, açıq və pulsuz.",
+    missionTitle: "Məqsədimiz",
+    missionText: "Hər semestr onlarla dərslik zibilə atılır və ya rəflərdə toz yığır, halbuki kimsə məhz o kitabı almaq üzrədir. Bookal bu itkini azaltmaq üçün yaradılıb: oxuyub bitirdiyin kitabı paylaş, axtardığını tap.",
+    valuesTitle: "Nə təklif edirik",
+    values: [
+      { title: "Sadə elan lövhəsi", text: "Kitabını qiyməti və vəziyyəti ilə bir neçə dəqiqəyə elan et, ya da mübadilə üçün təklif et." },
+      { title: "Birbaşa əlaqə", text: "Alıcı və satıcı bir-biri ilə birbaşa razılaşır. Vasitəçi və gizli komissiya yoxdur." },
+      { title: "İstək siyahısı", text: "Bəyəndiyin kitabları saxla, sonra qayıdıb rahatlıqla seç." },
+    ],
+    ctaTitle: "Qoşul", ctaText: "Pulsuz hesab yarat və ilk elanını yerləşdir.",
+    ctaGuest: "Qeydiyyatdan keç", ctaMember: "Elanlara bax",
+    rulesTitle: "İcma qaydaları", rules: ["Elanlarda yalnız düzgün və qanuni kitab məlumatları paylaş.", "Qiymət, vəziyyət və şəkil kitabın real halını əks etdirməlidir.", "Alıcı və satıcı görüş və ödəniş şərtlərini özləri razılaşdırır; şəxsi məlumatları ehtiyatla paylaş."],
+    guideTitle: "İstifadə qaydası", guide: ["Hesab yarat və profilində əlaqə telefonunu əlavə et.", "Elan yerləşdir bölməsində kitabın məlumatlarını doldur və təsdiqə göndər.", "Elan təsdiqləndikdən sonra axtarış və kateqoriyalarla kitab tap; istək siyahına əlavə et və satıcı ilə əlaqə saxla."],
   },
   errors: {
     INVALID_CREDENTIALS: "E-poçt və ya şifrə yanlışdır.",
@@ -102,6 +146,7 @@ const az = {
 export type Copy = typeof az;
 
 const en: Copy = {
+  locale: "en" as Locale,
   brand: "Bookal",
   panelTitle: "Find the next reader for the books you've finished.",
   panelText: "Textbooks and novels passing from hand to hand, semester after semester.",
@@ -117,7 +162,7 @@ const en: Copy = {
     submit: "Sign up", haveAccount: "Already have an account?", login: "Log in",
   },
   home: {
-    navHome: "Home", navListings: "Listings", navLogin: "Log in / Sign up", logout: "Log out", tagline: "BOOK PLATFORM",
+    navHome: "Home", navListings: "Listings", navWishlist: "Wishlist", navAbout: "About", navLogin: "Log in / Sign up", logout: "Log out", tagline: "BOOK PLATFORM",
     heroTitle: "Give your old books a new home",
     heroSub: "Share the books you have finished, find the ones you need. An open listings board for swapping and selling used books.",
     browse: "Browse listings", post: "+ Post a listing", searchPh: "Search by title, author or subject...",
@@ -127,6 +172,10 @@ const en: Copy = {
     },
     listingsTitle: "Listings", countSuffix: " listings", empty: "No listings yet. Be the first to post one!",
     free: "Free", exchange: "Exchange", currency: "AZN",
+    contactLogin: "Log in to see contact number",
+    language: "Language", themeLight: "Switch to light mode", themeDark: "Switch to dark mode",
+    authorLabel: "Author", descriptionLabel: "Description", contactSeller: "Contact seller",
+    pdfDownload: "Open PDF", pdfRequiresVip: "An active VIP membership is required to access this PDF.",
     conditions: { NEW: "New", USED: "Used", HIGHLIGHTED: "Highlighted" },
     howTitle: "How it works",
     steps: [
@@ -158,6 +207,45 @@ const en: Copy = {
     passwordTitle: "Change password", passwordSub: "For your security, enter your current password first.",
     currentPassword: "Current password", newPassword: "New password", newPasswordHint: "At least 8 characters, with letters and digits.",
     changePassword: "Update password", passwordChanged: "Password changed.",
+    vipTitle: "Bookal VIP", vipSub: "VIP membership provides access to PDFs on active listings.",
+    vipStatus: "VIP status", vipActiveUntil: "Active until", vipInactive: "Not active", vipPending: "Your request is under review.",
+    vipRequest: "Request VIP", vipRequested: "VIP request submitted.", vipRequestPending: "Request pending", vipRequestAgain: "Create another request",
+    suspendedTitle: "Account access is suspended", suspendedText: "Your account is currently inactive. Sign out to continue.",
+  },
+  listing: {
+    title: "Post a listing", sub: "Enter the book details. Your listing will be published after admin approval.",
+    titleLabel: "Book title", author: "Author", category: "Category", language: "Book language", languageNames: { AZ: "Azerbaijani", TR: "Turkish", EN: "English", RU: "Russian", OTHER: "Other" }, condition: "Condition",
+    type: "Listing type", sale: "For sale", exchange: "Exchange", price: "Price (AZN)", description: "Description", image: "Image URL",
+    phone: "Contact phone", phoneHint: "Saved to your profile and shown to buyers on your listings.", submit: "Submit listing", success: "Listing submitted for approval.",
+    back: "Back to listings", choose: "Choose", newCondition: "New", usedCondition: "Used", highlighted: "Highlighted",
+  },
+  admin: {
+    title: "Admin panel", nav: "Admin", users: "Users", listings: "Listings", pendingListings: "Listings awaiting approval",
+    transactions: "Transactions", vipRequests: "VIP requests", approve: "Approve", reject: "Reject", delete: "Delete",
+    suspend: "Suspend", restore: "Restore", role: "Role", status: "Status", email: "Email", seller: "Seller",
+    buyer: "Buyer", date: "Date", price: "Price", empty: "Nothing to show.", actionDone: "Changes saved.", activeStatus: "Active",
+  },
+  wishlist: {
+    title: "My wishlist", sub: "Keep the books you like here and come back later.",
+    countSuffix: " books", empty: "Your wishlist is empty. Tap the heart on a listing to save a book.",
+    browse: "Browse listings", reserved: "Reserved", sold: "Sold",
+    add: "Add to wishlist", remove: "Remove from wishlist", loginToSave: "Log in to save",
+  },
+  about: {
+    title: "About Bookal",
+    sub: "A reader-to-reader book platform: simple, open and free.",
+    missionTitle: "Our mission",
+    missionText: "Every semester, dozens of textbooks get thrown away or gather dust on a shelf, while someone else is about to buy that exact book. Bookal exists to close that gap: share the books you've finished, find the ones you need.",
+    valuesTitle: "What we offer",
+    values: [
+      { title: "A simple listing board", text: "Post a book with its price and condition in minutes, or offer it for exchange." },
+      { title: "Direct contact", text: "Buyers and sellers agree directly. No middlemen and no hidden fees." },
+      { title: "Wishlist", text: "Save the books you like and come back to choose at your own pace." },
+    ],
+    ctaTitle: "Join in", ctaText: "Create a free account and post your first listing.",
+    ctaGuest: "Sign up", ctaMember: "Browse listings",
+    rulesTitle: "Community rules", rules: ["Post only accurate and lawful book information.", "The price, condition and image must reflect the book accurately.", "Buyers and sellers arrange payment and handover themselves; share personal information carefully."],
+    guideTitle: "How to use Bookal", guide: ["Create an account and add a contact phone to your profile.", "Fill in the book details under Post a listing and submit it for approval.", "Once approved, browse by search and category, save books to your wishlist and contact the seller."],
   },
   errors: {
     INVALID_CREDENTIALS: "Email or password is incorrect.",
@@ -198,10 +286,67 @@ const en: Copy = {
   },
 };
 
-const dict: Record<Locale, Copy> = { az, en };
+const tr: Copy = {
+  ...en,
+  locale: "tr",
+  panelTitle: "Bitirdiğin kitaplara yeni bir okur bul.",
+  panelText: "Ders kitapları ve romanlar dönemden döneme el değiştiriyor.",
+  login: { ...en.login, title: "Giriş yap", sub: "İlanlarını, istek listenı ve geçmişini yönet.", email: "E-posta", password: "Şifre", submit: "Giriş yap", noAccount: "Hesabın yok mu?", register: "Kayıt ol" },
+  register: { ...en.register, title: "Hesap oluştur", sub: "Sadece birkaç saniye sürer.", name: "Ad Soyad", university: "Üniversite / Şehir", universityPh: "Örn. AZTU, Bakü", phone: "Telefon (isteğe bağlı)", passwordHint: "En az 8 karakter, harf ve rakam içermeli.", submit: "Kayıt ol", haveAccount: "Zaten hesabın var mı?", login: "Giriş yap" },
+  home: {
+    ...en.home,
+    navHome: "Ana sayfa", navListings: "İlanlar", navWishlist: "İstek listesi", navAbout: "Hakkında", navLogin: "Giriş / Kayıt", logout: "Çıkış", tagline: "KİTAP PLATFORMU",
+    heroTitle: "Eski kitaplarına yeni bir sahip bul", heroSub: "Bitirdiğin kitapları paylaş, aradığını bul. Kullanılmış kitapları takas etmek ve satmak için herkese açık ilan panosu.",
+    browse: "İlanlara göz at", post: "+ İlan ver", searchPh: "Kitap adı, yazar veya ders ara...",
+    genres: { ...en.home.genres, all: "Tümü", textbook: "Ders kitabı", fiction: "Edebiyat", science: "Bilim", language_learning: "Dil öğrenimi", history: "Tarih", business: "İş dünyası", children: "Çocuk", other: "Diğer" },
+    listingsTitle: "İlanlar", countSuffix: " ilan", empty: "Henüz ilan yok. İlk ilanı sen ver!", free: "Ücretsiz", exchange: "Takas", contactLogin: "Telefonu görmek için giriş yap",
+    language: "Dil", themeLight: "Açık temaya geç", themeDark: "Koyu temaya geç",
+    authorLabel: "Yazar", descriptionLabel: "Açıklama", contactSeller: "Satıcıyla iletişim kur",
+    pdfDownload: "PDF'i aç", pdfRequiresVip: "Bu PDF'ye erişmek için aktif VIP üyeliği gerekir.",
+    conditions: { NEW: "Yeni", USED: "Kullanılmış", HIGHLIGHTED: "Notlu" }, howTitle: "Nasıl çalışır",
+    steps: ["Kayıt ol veya hesabına giriş yap.", "Artık ihtiyacın olmayan kitabı fiyatı ve durumuyla ilan ver.", "Arayanlar kitabı kategori veya aramayla bulur.", "Satıcıyla doğrudan iletişim kurup anlaşın."],
+    whyTitle: "Neden önemli", whyText: "Her dönem onlarca ders kitabı çöpe atılıyor veya rafta tozlanıyor; oysa başka biri aynı kitabı satın almak üzere. Bookal bu kaybı azaltmak için var.",
+    footer: "Bookal — okurdan okura, sade ve ücretsiz.", lockTitle: "Daha fazla ilan görmek ister misin?", lockText: "Seni {n} ilan daha bekliyor. Hepsini görmek için ücretsiz kayıt ol.", lockTextNoCount: "Hepsini görmek için ücretsiz kayıt ol.",
+    register: "Kayıt ol", login: "Giriş yap", prev: "Önceki", next: "Sonraki", page: "Sayfa {p} / {n}",
+  },
+  profile: {
+    ...en.profile,
+    title: "Profilim", sub: "Fotoğrafını, iletişim bilgilerini ve şifreni buradan yönet.", back: "Ana sayfaya dön", dateLocale: "tr-TR",
+    memberSince: "Üyelik", rating: "Puan", noRating: "Henüz puan yok", vip: "VIP", admin: "Yönetici",
+    infoTitle: "Profil bilgileri", infoSub: "Alıcılar ve satıcılar sana bu bilgilerden ulaşır.", photo: "Profil fotoğrafı", changePhoto: "Fotoğraf seç", removePhoto: "Fotoğrafı sil", photoHint: "JPG, PNG veya WebP. Fotoğraf otomatik küçültülür.",
+    name: "Ad Soyad", email: "E-posta", emailHint: "E-posta değiştirilemez.", university: "Üniversite / Şehir", universityPh: "Örn. AZTU, Bakü", phone: "Telefon numarası", phonePh: "+994 50 123 45 67", phoneHint: "Yalnızca giriş yapan kullanıcılara görünür.", save: "Değişiklikleri kaydet", saved: "Değişiklikler kaydedildi.",
+    passwordTitle: "Şifreyi değiştir", passwordSub: "Güvenliğin için önce mevcut şifreni gir.", currentPassword: "Mevcut şifre", newPassword: "Yeni şifre", newPasswordHint: "En az 8 karakter, harf ve rakam içermeli.", changePassword: "Şifreyi güncelle", passwordChanged: "Şifre değiştirildi.",
+    vipTitle: "Bookal VIP", vipSub: "VIP üyelik, aktif ilanlardaki PDF kitaplara erişim sağlar.", vipStatus: "VIP durumu", vipActiveUntil: "Şu tarihe kadar aktif", vipInactive: "Aktif değil", vipPending: "Başvurun inceleniyor.", vipRequest: "VIP başvurusu yap", vipRequested: "VIP başvurusu gönderildi.", vipRequestPending: "Başvuru beklemede", vipRequestAgain: "Yeni başvuru oluştur",
+    suspendedTitle: "Hesap erişimi askıya alındı", suspendedText: "Hesabın şu anda etkin değil. Devam etmek için çıkış yap.",
+  },
+  listing: {
+    title: "Yeni ilan", sub: "Kitap bilgilerini gir. İlanın yönetici onayından sonra yayınlanacak.", titleLabel: "Kitap adı", author: "Yazar", category: "Kategori", language: "Kitabın dili", languageNames: { AZ: "Azerbaycan Türkçesi", TR: "Türkçe", EN: "İngilizce", RU: "Rusça", OTHER: "Diğer" }, condition: "Durumu", type: "İlan türü", sale: "Satış", exchange: "Takas", price: "Fiyat (AZN)", description: "Açıklama", image: "Görsel bağlantısı", phone: "İletişim telefonu", phoneHint: "Profiline kaydedilir ve ilanlarında alıcılara gösterilir.", submit: "İlanı gönder", success: "İlan onay için gönderildi.", back: "İlanlara dön", choose: "Seç", newCondition: "Yeni", usedCondition: "Kullanılmış", highlighted: "Notlu",
+  },
+  admin: {
+    title: "Yönetici paneli", nav: "Yönetici", users: "Kullanıcılar", listings: "İlanlar", pendingListings: "Onay bekleyen ilanlar", transactions: "İşlemler", vipRequests: "VIP başvuruları", approve: "Onayla", reject: "Reddet", delete: "Sil", suspend: "Askıya al", restore: "Geri yükle", role: "Rol", status: "Durum", email: "E-posta", seller: "Satıcı", buyer: "Alıcı", date: "Tarih", price: "Fiyat", empty: "Gösterilecek kayıt yok.", actionDone: "Değişiklikler kaydedildi.", activeStatus: "Aktif",
+  },
+  wishlist: { ...en.wishlist, title: "İstek listem", sub: "Beğendiğin kitapları burada sakla ve sonra geri dön.", countSuffix: " kitap", empty: "İstek listen boş. Bir kitabı kaydetmek için ilandaki kalbe dokun.", browse: "İlanlara göz at", reserved: "Rezerve", sold: "Satıldı", add: "İstek listesine ekle", remove: "İstek listesinden çıkar", loginToSave: "Kaydetmek için giriş yap" },
+  about: {
+    ...en.about,
+    title: "Bookal hakkında", sub: "Okurdan okura kitap platformu: sade, açık ve ücretsiz.", missionTitle: "Misyonumuz", missionText: "Her dönem onlarca ders kitabı çöpe atılıyor veya rafta tozlanıyor; oysa başka biri aynı kitabı almak üzere. Bookal bu kaybı azaltmak için kuruldu: bitirdiğin kitabı paylaş, aradığını bul.", valuesTitle: "Sunduklarımız",
+    values: [{ title: "Basit ilan panosu", text: "Kitabını fiyatı ve durumuyla dakikalar içinde satışa veya takasa koy." }, { title: "Doğrudan iletişim", text: "Alıcı ve satıcı doğrudan anlaşır. Aracı veya gizli ücret yok." }, { title: "İstek listesi", text: "Beğendiğin kitapları kaydet ve daha sonra incele." }],
+    ctaTitle: "Bize katıl", ctaText: "Ücretsiz hesap oluştur ve ilk ilanını ver.", ctaGuest: "Kayıt ol", ctaMember: "İlanlara göz at",
+    rulesTitle: "Topluluk kuralları", rules: ["Yalnızca doğru ve yasal kitap bilgileri paylaş.", "Fiyat, durum ve görsel kitabın gerçek hâlini yansıtmalı.", "Alıcı ve satıcı ödeme ve teslimat koşullarını kendileri belirler; kişisel bilgilerini dikkatli paylaş."],
+    guideTitle: "Bookal nasıl kullanılır", guide: ["Hesap oluştur ve profiline iletişim telefonunu ekle.", "İlan ver bölümünde kitap bilgilerini doldur ve onaya gönder.", "İlan onaylandıktan sonra arama ve kategorilerle kitap bul, istek listene ekle ve satıcıyla iletişim kur."],
+  },
+  errors: { ...en.errors, INVALID_CREDENTIALS: "E-posta veya şifre yanlış.", EMAIL_TAKEN: "Bu e-posta ile zaten bir hesap var.", WRONG_PASSWORD: "Mevcut şifren yanlış.", VALIDATION: "İşaretli alanları kontrol edip tekrar dene.", UNAUTHENTICATED: "Bu işlem için giriş yapmalısın.", NOT_FOUND: "Aradığın kayıt bulunamadı.", FORBIDDEN: "Bu işlemi yapma iznin yok.", GENERIC: "Bir hata oluştu. Lütfen sonra tekrar dene." },
+  fields: { ...en.fields, name: "Ad en az 2 karakter olmalı.", email: "Geçerli bir e-posta adresi gir.", password: "Şifre en az 8 karakter ve harf ile rakam içermeli.", phone: "Geçerli bir telefon numarası gir.", title: "Kitap adını gir (2–150 karakter).", author: "Yazar adını gir (2–120 karakter).", description: "En fazla 2000 karakter.", language: "Dil seç.", condition: "Durum seç.", type: "İlan türü seç.", genreId: "Kategori seç.", subjectId: "Geçerli bir ders seç.", price: "Fiyatı gir (0–9999,99). Ücretsiz için 0 gir.", coverUrl: "Görsel bağlantısı https ile başlamalı.", rating: "1 ile 5 arasında puan seç.", comment: "Yorum en fazla 1000 karakter olabilir." },
+};
+
+const dict: Record<Locale, Copy> = { az, en, tr };
 
 /** Reads the `lang` cookie (same key idea as the current site); defaults to Azerbaijani. */
 export async function getCopy() {
   const lang = (await cookies()).get("lang")?.value;
-  return dict[lang === "en" ? "en" : "az"];
+  return dict[lang === "tr" ? "tr" : lang === "en" ? "en" : "az"];
+}
+
+export async function getLocale(): Promise<Locale> {
+  const lang = (await cookies()).get("lang")?.value;
+  return lang === "tr" || lang === "en" ? lang : "az";
 }

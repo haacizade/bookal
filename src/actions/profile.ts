@@ -2,8 +2,8 @@
 
 import bcrypt from "bcryptjs";
 import { revalidatePath } from "next/cache";
-import { auth } from "@/auth";
 import { prisma } from "@/lib/prisma";
+import { getActiveUser } from "@/lib/session";
 import { AVATAR_MAX_CHARS, AVATAR_RE, passwordChangeSchema, profileSchema } from "@/lib/validation";
 import type { AuthState } from "./types";
 
@@ -11,7 +11,7 @@ const str = (v: FormDataEntryValue | null) => (typeof v === "string" ? v : "");
 
 /** Name, university, phone and profile photo. Email and username are not editable. */
 export async function updateProfileAction(_prev: AuthState, fd: FormData): Promise<AuthState> {
-  const id = (await auth())?.user?.id;
+  const id = (await getActiveUser())?.id;
   if (!id) return { ok: false, code: "UNAUTHENTICATED" };
 
   const values = { name: str(fd.get("name")), university: str(fd.get("university")), phone: str(fd.get("phone")) };
@@ -47,7 +47,7 @@ export async function updateProfileAction(_prev: AuthState, fd: FormData): Promi
 }
 
 export async function changePasswordAction(_prev: AuthState, fd: FormData): Promise<AuthState> {
-  const id = (await auth())?.user?.id;
+  const id = (await getActiveUser())?.id;
   if (!id) return { ok: false, code: "UNAUTHENTICATED" };
 
   const parsed = passwordChangeSchema.safeParse({ currentPassword: str(fd.get("currentPassword")), password: str(fd.get("password")) });
