@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { redirect } from "next/navigation";
+import { logoutAction } from "@/actions/auth";
 import { getCopy } from "@/lib/copy";
 import { prisma } from "@/lib/prisma";
 import { requireUser } from "@/lib/session";
@@ -60,6 +61,8 @@ export default async function DashboardPage() {
         />
         <VipPanel t={p} errors={t.errors} dateLocale={p.dateLocale} active={vipActive} expiresAt={user.vipExpiresAt?.toISOString() ?? null} pendingRequest={!!pendingVip} />
         <PasswordForm t={p} errors={t.errors} fieldErrors={t.fields} />
+
+        <form action={logoutAction} className="pf-logout"><button className="btn btn-ghost">{t.home.logout}</button></form>
       </main>
 
       <footer className="bk-footer">{t.home.footer}</footer>

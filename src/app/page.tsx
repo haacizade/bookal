@@ -9,7 +9,8 @@ import { GuestLock } from "@/components/catalog/GuestLock";
 import { Shelf } from "@/components/catalog/Shelf";
 import { SiteHeader } from "@/components/site/SiteHeader";
 
-const CHIPS = ["all", "textbook", "fiction", "science", "language_learning", "other"] as const;
+const CHIPS = ["all", "textbook", "fiction", "science", "language_learning", "history", "business", "children", "other"] as const;
+const SHELF = CHIPS.filter((c) => c !== "all");
 
 export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
   const [t, viewer, sp] = await Promise.all([getCopy(), getViewer(), searchParams]);
@@ -59,7 +60,7 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
               ))}
             </div>
           </div>
-          <Shelf />
+          <Shelf items={SHELF.map((c) => ({ slug: c, label: h.genres[c], href: chipHref(c) }))} />
         </section>
 
         <main className="wrap bk-main" id="elanlar" style={{ scrollMarginTop: 70 }}>

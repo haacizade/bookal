@@ -5,7 +5,7 @@ import type { Copy } from "@/lib/copy";
 import { WishlistButton } from "./WishlistButton";
 
 /** Genre slug -> the colour family of the original Bookal design (see home.css `.card[data-cat=…]`). */
-const CAT: Record<string, string> = { textbook: "textbook", fiction: "fiction", science: "science", language_learning: "language" };
+const CAT: Record<string, string> = { textbook: "textbook", fiction: "fiction", science: "science", language_learning: "language", history: "history", business: "business", children: "children" };
 export const catOf = (genre: string) => CAT[genre] ?? "other";
 
 export function ListingCard({ item, t, index, canWishlist = false, wishlistLabels }: {

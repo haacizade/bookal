@@ -76,3 +76,5 @@
   .bk .id-card{padding:18px;}
   .bk .pill-name{display:none;}
 }
+
+.bk .pf-logout{margin-top:40px; padding-top:24px; border-top:1px solid var(--line); display:flex; justify-content:flex-start;}

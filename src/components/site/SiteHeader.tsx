@@ -1,5 +1,4 @@
 import Link from "next/link";
-import { logoutAction } from "@/actions/auth";
 import type { Copy } from "@/lib/copy";
 import { Avatar } from "./Avatar";
 import { LanguageSwitcher } from "./LanguageSwitcher";
@@ -35,14 +34,11 @@ export function SiteHeader({ t, viewer, active }: { t: Copy; viewer: HeaderViewe
           <LanguageSwitcher locale={t.locale} label={h.language} />
           <ThemeToggle lightLabel={h.themeLight} darkLabel={h.themeDark} />
           {viewer ? (
-            <>
-              <Link href="/dashboard" className="pill-user">
-                <Avatar name={viewer.name} src={viewer.avatarUrl} size={26} />
-                <span className="pill-name">{viewer.name}</span>
-                {viewer.isVip && !viewer.isSuspended && <span className="vip-badge">VIP</span>}
-              </Link>
-              <form action={logoutAction}><button className="btn btn-ghost">{h.logout}</button></form>
-            </>
+            <Link href="/dashboard" className="pill-user">
+              <Avatar name={viewer.name} src={viewer.avatarUrl} size={26} />
+              <span className="pill-name">{viewer.name}</span>
+              {viewer.isVip && !viewer.isSuspended && <span className="vip-badge">VIP</span>}
+            </Link>
           ) : (
             <Link href="/login" className="btn btn-primary">{h.navLogin}</Link>
           )}
