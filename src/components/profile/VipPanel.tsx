@@ -5,17 +5,16 @@ import { requestVipAction } from "@/actions/vip";
 import type { VipRequestState } from "@/actions/types";
 import type { Copy } from "@/lib/copy";
 
-export function VipPanel({ t, errors, active, expiresAt, pendingRequest }: {
+export function VipPanel({ t, errors, dateLocale, active, expiresAt, pendingRequest }: {
   t: Copy["profile"];
   errors: Copy["errors"];
   dateLocale: string;
   active: boolean;
   expiresAt: string | null;
   pendingRequest: boolean;
-}: {
+}) {
   const [state, action, pending] = useActionState<VipRequestState, FormData>(requestVipAction, null);
   const requested = state?.ok || pendingRequest;
-  dateLocale: string;
 
   return (
     <section className="pf-card vip-panel">
